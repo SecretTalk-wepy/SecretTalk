@@ -1,0 +1,53 @@
+<style type="less">
+  .tab_item {
+    height: 100%;
+  }
+  page, .body{
+    height: 100%;
+    font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+    background-color: #f0eff5;
+  }
+</style>
+<template>
+  <view class="body">
+    <view class="tab_item tab_message" hidden="{{currentTab != 0}}">
+      <message />
+    </view>
+    <view class="tab_item tab_discovery" hidden="{{currentTab != 1}}">
+      <discovery />
+    </view>
+    <view class="tab_item tab_me" hidden="{{currentTab != 2}}">
+      <me />
+    </view>
+
+    <tab :active.sync="currentTab" />
+    <toast />
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Tab from '../components/tab'
+  export default class Main extends wepy.page {
+    config = {
+      'navigationBarTitleText': '秘密说',
+      'navigationBarTextStyle': 'white',
+      'navigationBarBackgroundColor': '#3b3a40'
+    };
+
+    components = {
+      tab: Tab
+    };
+
+    data = {
+      currentTab: 0
+    };
+
+    methods = {
+    };
+
+    onShow() {
+      this.currentTab = 0
+    }
+  }
+</script>

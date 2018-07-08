@@ -1,0 +1,60 @@
+@import '../style/weui.wxss';
+
+<style lang="less">
+  .userinfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .userinfo-avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+  }
+
+  .userinfo-nickname {
+    color: #aaa;
+  }
+
+  #app_entrance {
+    width: 450rpx;
+    position: absolute;
+    bottom:15%;
+    border:2rpx solid;
+    border-radius:25rpx;
+    left:20%;
+  }
+</style>
+<template>
+  <view class="container">
+    <button id="app_entrance" type="primary" bindtap="enterLoginPage">秘密世界</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '秘密说'
+    }
+
+    methods = {
+
+      /**
+       * @method enterLoginPage
+       * @desc enter the login in page
+       */
+      enterLoginPage() {
+        // wx.navigateTo({
+        //   url: './login'
+        // })
+        this.$root.$navigate({url: './login'})
+        console.log('yes')
+      }
+    }
+
+    onLoad () {}  // 在Page和Component共用的生命周期函数
+}
+</script>
