@@ -1,24 +1,37 @@
 <style type="less">
-  .tab_item {
-    height: 100%;
+  .tab_send_item {
+    height: 30%;
+  }
+  .tab_send_tab {
+    height: 40%;
   }
   page, .body{
     height: 100%;
     font-family: '\5FAE\8F6F\96C5\9ED1', arial;
     background-color: #f0eff5;
   }
+  .me {
+    height: 35%;
+  }
 </style>
 <template>
   <view class="body">
-    <view class="tab_item tab_message" hidden="{{currentTab != 0}}">
-      <message />
+
+    <view class="secrets" hidden="{{currentTab !=0}}">
+      <view class="tab_send_item">
+        <sendSecret />
+      </view>
+      <view>
+        <secretTab :secretactive.sync="secretTabs" />
+      </view>
     </view>
-    <view class="tab_item tab_discovery" hidden="{{currentTab != 1}}">
-      <discovery />
+    <view class="square" hidden="{{currentTab !=1}}">
+
     </view>
-    <view class="tab_item tab_me" hidden="{{currentTab != 2}}">
-      <me />
+    <view class="me" hidden="{{currentTab !=2}}">
+      <label />
     </view>
+
 
     <tab :active.sync="currentTab" />
     <toast />
@@ -28,7 +41,11 @@
 <script>
   import wepy from 'wepy'
   import Tab from '../components/tab'
-  export default class Main extends wepy.page {
+  import Toast from 'wepy-com-toast'
+  import SendSecret from '../components/sendsecret'
+  import SecretTab from '../components/secrettab'
+  import Label from '../components/label'
+export default class Main extends wepy.page {
     config = {
       'navigationBarTitleText': '秘密说',
       'navigationBarTextStyle': 'white',
@@ -36,11 +53,16 @@
     };
 
     components = {
-      tab: Tab
+      tab: Tab,
+      toast: Toast,
+      sendSecret: SendSecret,
+      secretTab: SecretTab,
+      label: Label
     };
 
     data = {
-      currentTab: 0
+      currentTab: 0,
+      sercretTabs: 0
     };
 
     methods = {
@@ -48,6 +70,17 @@
 
     onShow() {
       this.currentTab = 0
+      this.secretTabs = 0
+    };
+    showToast(name) {
+      let promise = this.$invoke('toast', 'show', {
+        title: `${name}`,
+        img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+      })
+
+      promise.then((d) => {
+        console.log('toast done')
+      })
     }
   }
 </script>
