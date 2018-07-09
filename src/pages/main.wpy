@@ -61,13 +61,11 @@
                 </view>
             </view>
         </view>
-        <Tab />
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
-    import Tab from '../components/tab'
 
     const sliderWidth = 96
 
@@ -77,7 +75,6 @@
         }
 
         components = {
-            Tab,
         }
 
         data = {
