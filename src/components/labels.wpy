@@ -1,18 +1,18 @@
 <style type="less">
-  .labelsView {
-    height: 100%;
-  }
+    .labelsView {
+        height: 100%;
+    }
 </style>
 <template>
-  <view class="labelsView">
-  </view>
+    <view class="labelsView">
+    </view>
 </template>
 <script>
-  import wepy from 'wepy'
+    import wepy from 'wepy'
 
-  export default class Labels extends wepy.component {
-    onLoad () {
-      console.log('enter')
-    };
-  }
+    export default class Labels extends wepy.component {
+        onLoad () {
+            console.log('enter')
+        };
+    }
 </script>
