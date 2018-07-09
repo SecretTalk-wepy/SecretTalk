@@ -21,18 +21,32 @@
       <userIcon />
     </view>
   </view>
+  <view class="options">
+    <panel>
+      <view>
+        我的赞
+      </view>
+    </panel>
+    <panel>
+      <view>
+        退出登录
+      </view>
+    </panel>
+  </view>
 </template>
 <script>
   import wepy from 'wepy'
   import Labels from './labels'
   import Icon from './icon'
+  import Panel from './panel'
   export default class Label extends wepy.component {
     onLoad () {
       console.log('enter')
     };
     components = {
       labels: Labels,
-      userIcon: Icon
-    }
+      userIcon: Icon,
+      panel: Panel
+    };
 }
 </script>
