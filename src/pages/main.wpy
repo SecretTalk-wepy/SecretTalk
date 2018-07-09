@@ -18,11 +18,11 @@
         height: 360rpx;
     }
     .header-wrapper image {
-            height: 100%;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-        }
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
     .btn-send {
         width: 160rpx;
         height: 160rpx;
@@ -42,7 +42,7 @@
     <view>
         <view class="header-wrapper">
             <image class="header-bg-img" src="../images/bg.jpg" mode="aspectFill" />
-            <button class="btn-send"><image src="../images/btn.jpg"/></button>
+            <button class="btn-send" @tap="editNewSecret"><image src="../images/btn.jpg"/></button>
         </view>
         <view class="navbar">
             <view class="page__bd">
@@ -60,11 +60,13 @@
                 </view>
             </view>
         </view>
+        <Tab />
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
+    import Tab from '../components/tab'
 
     const sliderWidth = 96
 
@@ -74,6 +76,7 @@
         }
 
         components = {
+            Tab,
         }
 
         data = {
@@ -87,6 +90,9 @@
             tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
+            }
+            editNewSecret() {
+                this.$root.$navigate({url: './edit_secret'})
             }
         }
 
