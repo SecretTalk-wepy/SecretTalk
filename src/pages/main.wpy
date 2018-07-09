@@ -1,53 +1,99 @@
 <style type="less">
-  .tab_item {
-    height: 100%;
-  }
-  page, .body{
-    height: 100%;
-    font-family: '\5FAE\8F6F\96C5\9ED1', arial;
-    background-color: #f0eff5;
-  }
+    /* 覆盖weui颜色样式 */
+    .weui-navbar__item.weui-bar__item_on {
+        color : #800080
+    }
+    .tab_item {
+        height: 100%;
+    }
+    page, .body{
+        height: 100%;
+        font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+        background-color: #f0eff5;
+    }
+    .header-wrapper {
+        position: relative;
+        display: flex;
+        align-content: center;
+        height: 360rpx;
+    }
+    .header-wrapper image {
+            height: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    .btn-send {
+        width: 160rpx;
+        height: 160rpx;
+        border-radius: 50%;
+        box-shadow: 8rpx 8rpx rgba(0,0,0,0.5);
+        border: 0;
+        padding: 0;
+        margin-top: 240rpx;
+        
+        image {
+            height: 160rpx;
+            width: 160rpx;
+        }
+    }
 </style>
 <template>
-  <view class="body">
-    <view class="tab_item tab_message" hidden="{{currentTab != 0}}">
-      <message />
+    <view>
+        <view class="header-wrapper">
+            <image class="header-bg-img" src="../images/bg.jpg" mode="aspectFill" />
+            <button class="btn-send"><image src="../images/btn.jpg"/></button>
+        </view>
+        <view class="navbar">
+            <view class="page__bd">
+                <view class="weui-tab">
+                    <view class="weui-navbar">
+                        <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+                            <view class="weui-navbar__title">{{item}}</view>
+                        </view>
+                        <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+                    </view>
+                    <view class="weui-tab__panel">
+                        <view class="weui-tab__content" hidden="{{activeIndex != 0}}">选项一的内容</view>
+                        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
-    <view class="tab_item tab_discovery" hidden="{{currentTab != 1}}">
-      <discovery />
-    </view>
-    <view class="tab_item tab_me" hidden="{{currentTab != 2}}">
-      <me />
-    </view>
-
-    <tab :active.sync="currentTab" />
-    <toast />
-  </view>
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import Tab from '../components/tab'
-  export default class Main extends wepy.page {
-    config = {
-      'navigationBarTitleText': '秘密说',
-      'navigationBarTextStyle': 'white',
-      'navigationBarBackgroundColor': '#3b3a40'
-    };
+    import wepy from 'wepy'
 
-    components = {
-      tab: Tab
-    };
+    const sliderWidth = 96
 
-    data = {
-      currentTab: 0
-    };
+    export default class Main extends wepy.page {
+        config = {
+            'navigationBarTitleText': '秘密说'
+        }
 
-    methods = {
-    };
+        components = {
+        }
 
-    onShow() {
-      this.currentTab = 0
+        data = {
+            tabs: ['我发出的', '我收到的'],
+            activeIndex: 0,
+            sliderOffset: 0,
+            sliderLeft: 0
+        }
+
+        methods = {
+            tabClick (e) {
+                this.sliderOffset = e.currentTarget.offsetLeft
+                this.activeIndex = e.currentTarget.id
+            }
+        }
+
+        onLoad () {
+            let res = wx.getSystemInfoSync()
+            this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2
+            this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
+        }
     }
-  }
 </script>
