@@ -15,6 +15,7 @@
     <view class="container">
         <button id="entrance" @tap="enterLoginPage">登录</button>
     </view>
+
 </template>
 
 <script>

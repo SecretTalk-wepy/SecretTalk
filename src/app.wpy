@@ -20,7 +20,8 @@ export default class extends wepy.app {
         pages: [
             'pages/index',
             'pages/login',
-            'pages/main'
+            'pages/main',
+            'pages/edit_secret'
         ],
         window: {
             backgroundTextStyle: 'light',

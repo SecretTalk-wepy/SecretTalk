@@ -4,7 +4,7 @@
     .tab {
         color: @fontcolor;
         position: fixed;
-        bottom: 0;
+        bottom: 0%;
         height: 100rpx;
         width: 100%;
         border-top: 1px solid #dad9d6;
@@ -19,16 +19,6 @@
             width: 33%;
             text-align: center;
         }
-        .icon {
-            width: 60rpx;
-            height: 60rpx;
-            display: block;
-            margin: auto;
-        }
-        .title {
-            padding-top: 6rpx;
-            display: block;
-        }
     }
 </style>
 <template>
@@ -37,15 +27,14 @@
             <image class="icon" src="../images/secret{{active == 0 ? '_active' : ''}}.png"></image>
             <text class="title">秘密</text>
         </view>
-        <view class="tab_item tab_discovery{{active == 2 ? ' active' : ''}}" @tap="change(2)">
-            <image class="icon" src="../images/discovery{{active == 2 ? '_active' : ''}}.png"></image>
-            <text class="title">发现</text>
+        <view class="tab_item tab_discovery{{active == 1 ? ' active' : ''}}" @tap="change(1)">
+            <image class="icon" src="../images/discovery{{active == 1 ? '_active' : ''}}.png"></image>
+            <text class="title">广场</text>
         </view>
-        <view class="tab_item tab_me{{active == 3 ? ' active' : ''}}" @tap="change(3)">
-            <image class="icon" src="../images/me{{active == 3 ? '_active' : ''}}.png"></image>
+        <view class="tab_item tab_me{{active == 2 ? ' active' : ''}}" @tap="change(2)">
+            <image class="icon" src="../images/me{{active == 2 ? '_active' : ''}}.png"></image>
             <text class="title">我</text>
         </view>
-    </view>
 </template>
 <script>
     import wepy from 'wepy'
@@ -62,7 +51,6 @@
         methods = {
             change (idx, evt) {
                 this.active = +idx
-                console.log(idx)
             }
         };
 

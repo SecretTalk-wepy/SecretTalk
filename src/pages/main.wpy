@@ -32,12 +32,13 @@
         padding: 0;
         margin-top: 240rpx;
         
-        image {
-            height: 160rpx;
-            width: 160rpx;
-        }
+    }
+    .btn-send image {
+        height: 160rpx;
+        width: 160rpx;
     }
 </style>
+
 <template>
     <view>
         <view class="header-wrapper">
@@ -90,7 +91,7 @@
             tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
-            }
+            },
             editNewSecret() {
                 this.$root.$navigate({url: './edit_secret'})
             }
@@ -102,4 +103,5 @@
             this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
         }
     }
+
 </script>
