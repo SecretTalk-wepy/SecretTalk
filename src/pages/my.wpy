@@ -1,0 +1,27 @@
+<style type="less">
+    .secret-text-area {
+        height: 400rpx;
+        width: 100%;
+        border-bottom: 1px solid #888888;
+    }
+</style>
+
+<template>
+    <view>
+        <text>here is my page</text>
+        <bottomTabBar></bottomTabBar>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import BottomTabBar from '../components/tab'
+
+    export default class MyPage extends wepy.page {
+        data = {}
+
+        components = {
+            bottomTabBar: BottomTabBar
+        }
+    }
+</script>

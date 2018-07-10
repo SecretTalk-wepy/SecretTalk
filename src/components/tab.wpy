@@ -12,34 +12,39 @@
         font-size: 24rpx;
         white-space: nowrap;
         .tab_item {
-            &.active {
-                color: @activecolor;
-            }
             display: inline-block;
             width: 33%;
             text-align: center;
         }
     }
+
+    .icon {
+        height: 60rpx;
+        width: 60rpx
+    }
 </style>
+
 <template>
     <view class="tab">
-        <view class="tab_item tab_message{{active == 0 ? ' active' : ''}}" @tap="change(0)">
-            <image class="icon" src="../images/secret{{active == 0 ? '_active' : ''}}.png"></image>
-            <text class="title">秘密</text>
+        <view class="tab_item" @tap="navigateToMainPage">
+            <image class="icon" src="../images/secret.png">
+            <text>秘密</text>
         </view>
-        <view class="tab_item tab_discovery{{active == 1 ? ' active' : ''}}" @tap="change(1)">
-            <image class="icon" src="../images/discovery{{active == 1 ? '_active' : ''}}.png"></image>
-            <text class="title">广场</text>
+        <view class="tab_item" @tap="navigateToPiazzaPage">
+            <image class="icon" src="../images/discovery.png"/>
+            <text>广场</text>
         </view>
-        <view class="tab_item tab_me{{active == 2 ? ' active' : ''}}" @tap="change(2)">
-            <image class="icon" src="../images/me{{active == 2 ? '_active' : ''}}.png"></image>
-            <text class="title">我</text>
+        <view class="tab_item" @tap="navigateToMyPage">
+            <image class="icon" src="../images/me.png"/>
+            <text>我</text>
         </view>
+    </view>
 </template>
+
 <script>
     import wepy from 'wepy'
 
-    export default class Tab extends wepy.component {
+    export default class BottomTabBar extends wepy.component {
         props = {
             active: {
                 twoWay: true
@@ -51,6 +56,18 @@
         methods = {
             change (idx, evt) {
                 this.active = +idx
+            },
+
+            navigateToMainPage() {
+                this.$root.$navigate({url: '../pages/main'})
+            },
+
+            navigateToPiazzaPage() {
+                this.$root.$navigate({url: '../pages/piazza'})
+            },
+
+            navigateToMyPage() {
+                this.$root.$navigate({url: '../pages/my'})
             }
         };
 

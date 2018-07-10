@@ -61,11 +61,13 @@
                 </view>
             </view>
         </view>
+        <bottomTabBar></bottomTabBar>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
+    import BottomTabBar from '../components/tab'
 
     const sliderWidth = 96
 
@@ -75,6 +77,7 @@
         }
 
         components = {
+            bottomTabBar: BottomTabBar
         }
 
         data = {
