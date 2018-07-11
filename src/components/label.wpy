@@ -1,52 +1,52 @@
 <style type="less">
-  .labelView {
-    background-color: #cd5c5c;
-    height: 100%;
-  }
-  .labelslist {
-    float: left;
-    width:50%;
-    height: 100%;
-  }
-  .userIcons {
-    float: right;
-  }
+    .labelView {
+        background-color: #cd5c5c;
+        height: 100%;
+    }
+    .labelslist {
+        float: left;
+        width:50%;
+        height: 100%;
+    }
+    .userIcons {
+        float: right;
+    }
 </style>
 <template>
-  <view class="labelView">
-    <view class = "labelslist">
-      <labels />
+    <view class="labelView">
+        <view class = "labelslist">
+            <labels />
+        </view>
+        <view class="userIcons">
+            <userIcon />
+        </view>
     </view>
-    <view class="userIcons">
-      <userIcon />
+    <view class="options">
+        <panel>
+            <view>
+                我的赞
+            </view>
+        </panel>
+        <panel>
+            <view>
+                退出登录
+            </view>
+        </panel>
     </view>
-  </view>
-  <view class="options">
-    <panel>
-      <view>
-        我的赞
-      </view>
-    </panel>
-    <panel>
-      <view>
-        退出登录
-      </view>
-    </panel>
-  </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import Labels from './labels'
-  import Icon from './icon'
-  import Panel from './panel'
-  export default class Label extends wepy.component {
-    onLoad () {
-      console.log('enter')
-    };
-    components = {
-      labels: Labels,
-      userIcon: Icon,
-      panel: Panel
-    };
-}
+    import wepy from 'wepy'
+    import Labels from './labels'
+    import Icon from './icon'
+    import Panel from './panel'
+    export default class Label extends wepy.component {
+        onLoad () {
+            console.log('enter')
+        };
+        components = {
+            labels: Labels,
+            userIcon: Icon,
+            panel: Panel
+        };
+    }
 </script>

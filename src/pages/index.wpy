@@ -36,7 +36,7 @@
         onShow () {
             setTimeout(() => {
                 this.$root.$navigate({url: './login'})
-            }, 3000)
+            }, 500)
         }
 }
 </script>
