@@ -1,0 +1,26 @@
+<style scoped type="less">
+    .tag-item {
+        display: inline;
+        border-radius: 50%;
+    } 
+    .tag-item__on {
+        background-color: @mainColor;
+    }
+</style>
+<template>
+    <view class="selector-wrapper">
+        <h1>{{title}}</h1>
+        <view class="tags-wrapper">
+            <repeat for="tags" key="index" index="index" item="item">
+                <button class="tag-item tag-item__on">{{item.value}}</button>
+            </repeat>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class TagSelector extends wepy.component {
+        props = ['title', 'tags'];
+    }
+</script>

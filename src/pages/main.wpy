@@ -1,10 +1,7 @@
-<style type="less">
+<style scoped type="less">
     /* 覆盖weui颜色样式 */
     .weui-navbar__item.weui-bar__item_on {
         color : #800080
-    }
-    .tab_item {
-        height: 100%;
     }
     page, .body{
         height: 100%;
@@ -30,12 +27,16 @@
         box-shadow: 8rpx 8rpx rgba(0,0,0,0.5);
         border: 0;
         padding: 0;
-        margin-top: 240rpx;
+        margin-top: 200rpx;
+        z-index: 1;
         
     }
     .btn-send image {
         height: 160rpx;
         width: 160rpx;
+    }
+    .weui-tab__panel {
+        margin-bottom: 100rpx;
     }
 </style>
 
@@ -55,12 +56,23 @@
                         <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
                     </view>
                     <view class="weui-tab__panel">
-                        <view class="weui-tab__content" hidden="{{activeIndex != 0}}">选项一的内容</view>
-                        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
+                        <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                            <repeat for="{{sentList}}" key="index" index="index" item="item">
+                                <msgItem 
+                                    :content="item.content"
+                                    :time="item.time" />
+                            </repeat>
+                        </view>
+                        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                            <repeat for="{{recvList}}" key="index" index="index" item="item">
+                                <msgItem 
+                                    :content="item.content"
+                                    :time="item.time" />
+                            </repeat>
+                        </view>
                     </view>
                 </view>
             </view>
-            <bottomTabBar></bottomTabBar>
         </view>
         <bottomTabBar></bottomTabBar>
     </view>
@@ -69,6 +81,7 @@
 <script>
     import wepy from 'wepy'
     import BottomTabBar from '../components/tab'
+    import MsgItem from '../components/msgItem'
 
     const sliderWidth = 96
 
@@ -78,14 +91,57 @@
         }
 
         components = {
-            bottomTabBar: BottomTabBar
+            bottomTabBar: BottomTabBar,
+            msgItem: MsgItem
         }
 
         data = {
             tabs: ['我发出的', '我收到的'],
             activeIndex: 0,
             sliderOffset: 0,
-            sliderLeft: 0
+            sliderLeft: 0,
+            recvList: [
+                {
+                    id: 1,
+                    content: 'testsetsetsettestsetstest',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: 'testsetsetsettestsetstest',
+                    time: '20180808'
+                }
+            ],
+            sentList: [
+                {
+                    id: 1,
+                    content: 'testsets234234123123tstest',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: 'sehto234534uhgs4234jif as3423dfoh d23454hgh rtsfd ',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: 'testsetsetsettestsetstest',
+                    time: '20180808'
+                }, {
+                    id: 4,
+                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
+                    time: '20184737'
+                }, {
+                    id: 5,
+                    content: 'testsetsetsettestsetstest',
+                    time: '20180808'
+                }, {
+                    id: 6,
+                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
+                    time: '20184737'
+                }
+            ]
         }
 
         methods = {
@@ -95,6 +151,13 @@
             },
             editNewSecret() {
                 this.$root.$navigate({url: './edit_secret'})
+            }
+        }
+
+        events = {
+            'toDetail': (target) => {
+                console.log(target)
+                this.$root.$navigate({url: './secret_detail'})
             }
         }
 
