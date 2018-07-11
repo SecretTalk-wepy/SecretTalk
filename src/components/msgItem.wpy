@@ -52,7 +52,7 @@
 
         methods = {
             tapItem (e) {
-                this.$emit('toDetail', e);
+                this.$emit('toDetail', e)
             }
         }
     }
