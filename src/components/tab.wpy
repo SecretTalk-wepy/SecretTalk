@@ -27,7 +27,7 @@
 <template>
     <view class="tab">
         <view class="tab_item" @tap="navigateToMainPage">
-            <image class="icon" src="../images/secret.png">
+            <image class="icon" src="../images/secret.png" />
             <text>秘密</text>
         </view>
         <view class="tab_item" @tap="navigateToPiazzaPage">

@@ -10,11 +10,6 @@
         border-radius: 50%;
         background-color: #99ddff;
     }
-    .profilePhoto {
-        width: 100rpx;
-        height: 100rpx;
-        align-content: flex-start;
-    }
     .msg-content {
         width: 400rpx;
         font-size: 11pt;
@@ -33,10 +28,10 @@
         word-break: break-all;
     }
 </style>
-
 <template>
     <view class="msg-item-wrapper" @tap="tapItem">
-        <image class="profilePhoto" src="../images/temp_head.png">
+        <view class="user-icon">
+        </view>
         <view class="msg-content">
             {{ content }}
         </view>
@@ -45,11 +40,10 @@
         </view>
     </view>
 </template>
-
 <script>
     import wepy from 'wepy'
 
-    export default class shareContent extends wepy.component {
+    export default class MsgItem extends wepy.component {
         props = ['content', 'time'];
 
         onLoad () {
@@ -58,7 +52,7 @@
 
         methods = {
             tapItem (e) {
-                this.$emit('toShareDetail', e)
+                this.$emit('toDetail', e)
             }
         }
     }

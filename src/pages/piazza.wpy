@@ -1,6 +1,7 @@
 <style type="less">
     .weui-navbar__item.weui-bar__item_on {
-        color : #800080
+        color : #800080;
+        width: 20%;
     }
     .tab_item {
         height: 100%;
@@ -16,6 +17,9 @@
         align-content: center;
         height: 60rpx;
     }
+    .weui-tab__panel {
+        margin-bottom: 100rpx;
+    }
 
 </style>
 
@@ -27,18 +31,43 @@
                     <view wx:for="{{shareContentClass}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
                         <view class="weui-navbar__title">{{item}}</view>
                     </view>
-                    <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+                    <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px); width:20%"></view>
                 </view>
                 <view class="weui-tab__panel">
                     <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
-                        <shareContent></shareContent>
-                        <shareContent></shareContent>
+                        <repeat for="{{healthContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :content="item.content"
+                                :time="item.time" />
+                        </repeat>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
-                        <shareContent></shareContent>
+                        <repeat for="{{WorkplaceContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :content="item.content"
+                                :time="item.time" />
+                        </repeat>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 2}}">
-                        <shareContent></shareContent>
+                        <repeat for="{{emotionContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :content="item.content"
+                                :time="item.time" />
+                        </repeat>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 3}}">
+                        <repeat for="{{marriageContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :content="item.content"
+                                :time="item.time" />
+                        </repeat>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 4}}">
+                        <repeat for="{{otherContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :content="item.content"
+                                :time="item.time" />
+                        </repeat>
                     </view>
                 </view>
             </view>
@@ -53,12 +82,12 @@
     import BottomTabBar from '../components/tab'
     import ShareContent from '../components/shareContent'
 
+    const sliderWidth = 38
+    
     export default class Piazza extends wepy.page {
         config = {
             'navigationBarTitleText': '广场'
         }
-
-        data = {}
 
         components = {
             bottomTabBar: BottomTabBar,
@@ -66,26 +95,109 @@
         }
 
         data = {
-            shareContentClass: ['全部', '情感','生活'],
+            shareContentClass: ['健康', '职场', '情感', '婚姻', '其他'],
             activeIndex: 0,
             sliderOffset: 0,
-            sliderLeft: 0
+            sliderLeft: 0,
+            healthContentList: [
+                {
+                    id: 1,
+                    content: '健康找不到对象怎么办',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20180808'
+                }
+            ],
+
+            WorkplaceContentList: [
+                {
+                    id: 1,
+                    content: '职场找不到对象怎么办',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: '职场找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: '职场找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20180808'
+                }
+            ],
+
+            emotionContentList: [
+                {
+                    id: 1,
+                    content: '情感找不到对象怎么办',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: '情感找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: '情感找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20180808'
+                }
+            ],
+
+            marriageContentList: [
+                {
+                    id: 1,
+                    content: '婚姻找不到对象怎么办',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: '婚姻找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: '婚姻找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20180808'
+                }
+            ],
+
+            otherContentList: [
+                {
+                    id: 1,
+                    content: '其他找不到对象怎么办',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: '其他找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: '其他找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20180808'
+                }
+            ]
         }
 
         methods = {
             tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
-            },
-            editNewSecret() {
-                this.$root.$navigate({url: './edit_secret'})
+            }
+        }
+
+        events = {
+            'toShareDetail': (target) => {
+                console.log(target)
+                this.$root.$navigate({url: './shareContentDetail'})
             }
         }
 
         onLoad () {
             let res = wx.getSystemInfoSync()
-            this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2
-            this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
+            this.sliderLeft = (res.windowWidth / this.shareContentClass.length - sliderWidth) / 5
+            this.sliderOffset = res.windowWidth / this.shareContentClass.length * this.activeIndex
         }
     }
 </script>

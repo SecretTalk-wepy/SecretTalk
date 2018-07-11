@@ -1,0 +1,139 @@
+<style type="less">
+    page, .body{
+        height: 100%;
+        font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+        background-color: #f0eff5;
+    }
+    .header-wrapper {
+        position: relative;
+        display: flex;
+        align-content: center;
+        height: 5rpx;
+    }
+    .weui-tab__panel {
+        margin-bottom: 20rpx;
+        padding-top: 3rpx;
+    }
+    .likeAndCommentIcon {
+        width: 50rpx;
+        height: 50rpx;
+        position: relative;
+        display: flex;
+        align-content: flex-start;
+    }
+    .likenum, .comment {
+        display: inline;
+        font-size: 30rpx;
+        color: #333333;
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+    .oprationBtn {
+        min-width: 100rpx;
+        width: auto;
+        height: 60rpx;
+        background:transparent;
+        border: none;
+        border-color: transparent;
+        padding-left: 2rpx;
+        padding-right: 2rpx;
+        display: flex;
+        justify-content: space-between;
+    }
+    .oprationBtnWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-content: flex-end;
+        margin: 5px;
+    }
+    .divLine{
+        background: #E0E3DA;
+        width: 100%;
+        height: 5rpx;
+    }
+</style>
+
+<template>
+    <view class="page-wrapper">
+        <!--问题-->
+        <view class="weui-tab__panel">
+            <view class="weui-tab__content">
+                <repeat for="{{shareConversationContent}}" item="item" key="index" index="index">
+                    <shareContent 
+                        :content="item.content"
+                        :time="item.time" />
+                </repeat>
+            </view>
+        </view>
+
+        <!--热度和评论按钮-->
+        <view class="oprationBtnWrapper">
+            <button class="oprationBtn">
+                <image class="likeAndCommentIcon" src="../images/noLikesIcon.png"/>
+                <text class="likenum">99</text>
+            </button>
+            <button class="oprationBtn">
+                <image class="likeAndCommentIcon" src="../images/comment.png"/>
+                <text class="comment">评论</text>
+            </button>
+        </view>
+
+        <!--分割线-->
+        <view class="divLine"></view>
+
+        <!--评论区-->
+        <view class="weui-tab__panel">
+            <view class="weui-tab__content">
+                <repeat for="{{commentList}}" item="item" key="index" index="index">
+                    <commentItem 
+                        :content="item.content"
+                        :time="item.time" />
+                </repeat>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import ShareContent from '../components/shareContent'
+    import CommentItem from '../components/commentItem'
+
+    export default class ShareContentDetail extends wepy.page {
+        components = {
+            shareContent: ShareContent,
+            commentItem: CommentItem
+        };
+
+        data = {
+            shareConversationContent: [
+                {
+                    id: 1,
+                    content: '找不到对象怎么办',
+                    time: '20180808'
+                }
+            ],
+
+            commentList: [
+                {
+                    id: 1,
+                    content: '+1咯',
+                    time: '20180808'
+                },
+                {
+                    id: 2,
+                    content: '来自单身狗的忧虑',
+                    time: '20180808'
+                },
+                {
+                    id: 3,
+                    content: 'new一个',
+                    time: '20180808'
+                }
+            ]
+        }
+    }
+</script>

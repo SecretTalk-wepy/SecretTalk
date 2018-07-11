@@ -1,6 +1,6 @@
 <style lang="less">
 @import './style/weui.less';
-
+@mainColor : #800080;
 .container {
     height: 100%;
     display: flex;
@@ -22,8 +22,10 @@ export default class extends wepy.app {
             'pages/login',
             'pages/main',
             'pages/edit_secret',
+            'pages/secret_detail',
             'pages/piazza',
-            'pages/my'
+            'pages/my',
+            'pages/shareContentDetail'
         ],
         window: {
             backgroundTextStyle: 'light',

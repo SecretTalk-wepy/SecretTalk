@@ -1,5 +1,5 @@
 <style type="less">
-    .msg-item-wrapper {
+    .comment-item-wrapper {
         display: flex;
         justify-content: space-between;
         margin: 15px;
@@ -15,7 +15,7 @@
         height: 100rpx;
         align-content: flex-start;
     }
-    .msg-content {
+    .comment-content {
         width: 400rpx;
         font-size: 11pt;
         color: #333333;
@@ -26,21 +26,21 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
     }
-    .msg-time {
+    .comment-time {
         width: 100rpx;
-        font-size: 11pt;
+        font-size: 20rpx;
         color: #888888;
         word-break: break-all;
     }
 </style>
 
 <template>
-    <view class="msg-item-wrapper" @tap="tapItem">
+    <view class="comment-item-wrapper" @tap="tapItem">
         <image class="profilePhoto" src="../images/temp_head.png">
-        <view class="msg-content">
+        <view class="comment-content">
             {{ content }}
         </view>
-        <view class="msg-time">
+        <view class="comment-time">
             {{ time }}
         </view>
     </view>
@@ -49,7 +49,7 @@
 <script>
     import wepy from 'wepy'
 
-    export default class shareContent extends wepy.component {
+    export default class CommentItem extends wepy.component {
         props = ['content', 'time'];
 
         onLoad () {
