@@ -17,7 +17,7 @@
     import wepy from 'wepy'
     import BottomTabBar from '../components/tab'
 
-    export default class Main extends wepy.page {
+    export default class MyPage extends wepy.page {
         data = {}
 
         components = {
