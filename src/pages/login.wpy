@@ -31,9 +31,27 @@
              * @method enterLoginPage
              * @desc enter the login in page
              */
-            enterLoginPage: function () {
+            enterLoginPage: async function () {
+                await this.login()
                 this.$root.$navigate({url: './main'})
             }
         }
-}
+        
+        async login() {    
+            /* 获取code */
+            let loginRes = await wepy.login()
+            /* 服务端登录 */
+            await wepy.request({
+                url: 'http://193.112.125.76:8080/user/wxlogin',
+                method: 'POST',
+                header: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                data: {
+                    code: loginRes.code
+                }
+            });
+            console.log(loginRes)
+        }
+    }
 </script>

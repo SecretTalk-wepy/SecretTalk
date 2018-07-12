@@ -1,26 +1,46 @@
 <style scoped type="less">
+    .tags-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+    }
     .tag-item {
-        display: inline;
-        border-radius: 50%;
+        display: block;
+        box-sizing: border-box;
+        font-size: 11pt;
+        border-radius: 40rpx;
+        padding: 0 20rpx;
+        margin: 10rpx;
+        min-width: 100rpx;
+        height: 60rpx;
+        line-height: 60rpx;
     } 
     .tag-item__on {
-        background-color: @mainColor;
+        background-color: #800080;
+        color: #ffffff;
+    }
+    .tag-item__off {
+        background-color: #ffffff;
+        color: #800080;
     }
 </style>
 <template>
-    <view class="selector-wrapper">
-        <h1>{{title}}</h1>
-        <view class="tags-wrapper">
-            <repeat for="tags" key="index" index="index" item="item">
-                <button class="tag-item tag-item__on">{{item.value}}</button>
-            </repeat>
-        </view>
+    <view class="tags-wrapper">
+        <repeat for="{{tags}}" key="index" index="index" item="item">
+            <button class="tag-item tag-item__on" @tap="selectTag">{{item}}</button>
+        </repeat>
     </view>
 </template>
 <script>
     import wepy from 'wepy'
+    import 'wepy-async-function'
 
     export default class TagSelector extends wepy.component {
-        props = ['title', 'tags'];
+        props = ['tags']
+        methods = {
+            selectTag(e) {
+                console.log(e)
+            }
+        }
     }
 </script>
