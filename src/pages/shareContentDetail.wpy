@@ -48,6 +48,7 @@
         justify-content: space-between;
         align-content: flex-end;
         margin: 5px;
+        width: 35%; /*还要调整,最好自适应*/
     }
     .divLine{
         background: #E0E3DA;
@@ -79,14 +80,10 @@
 
         <!--热度和评论按钮-->
         <view class="oprationBtnWrapper">
-            <button class="oprationBtn">
-                <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
-                <text class="totallikenum">{{totalLikeNum}}</text>
-            </button>
-            <button class="oprationBtn">
-                <image class="totallikeAndCommentIcon" src="../images/comment.png"/>
-                <text class="comment">评论</text>
-            </button>
+            <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
+            <text class="totallikenum">{{totalLikeNum}}</text>
+            <image class="totallikeAndCommentIcon" src="../images/comment.png"/>
+            <text class="comment">评论</text>
         </view>
 
         <!--分割线-->
@@ -134,7 +131,7 @@
 
         data = {
             totalLikeNum: 99,
-            isCommentEditing:0,
+            isCommentEditing: 0,
 
             shareConversationContent: [
                 {

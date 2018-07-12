@@ -27,42 +27,31 @@
         -webkit-line-clamp: 3;
     }
     .comment-time {
-        width: 100rpx;
+        width: 120rpx;
         font-size: 20rpx;
         color: #888888;
         word-break: break-all;
     }
     .likenum {
         display: inline;
-        font-size: 30rpx;
+        font-size: 25rpx;
         color: #333333;
-        display: -webkit-box;
         text-overflow: ellipsis;
         word-break: break-all;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
-    }
-    .oprationBtn {
-        min-width: 100rpx;
         width: auto;
-        height: 60rpx;
-        background:transparent;
-        border: none;
-        border-color: transparent;
-        padding-left: 2rpx;
-        padding-right: 2rpx;
-        display: flex;
-        justify-content: space-between;
     }
-    .oprationBtnWrapper {
+    .likeBtnWrapper {
         display: flex;
         justify-content: space-between;
         align-content: flex-end;
         margin: 5px;
+        width: auto;
     }
     .likeIcon {
-        width: 50rpx;
-        height: 50rpx;
+        width: 45rpx;
+        height: 45rpx;
         position: relative;
         display: flex;
         align-content: flex-start;
@@ -77,11 +66,9 @@
         </view>
         <view class="comment-time">
             {{ time }}
-            <view class="oprationBtnWrapper">
-                <button class="oprationBtn" @tap="likeBtnClick">
-                    <image class="likeIcon" src="../images/likeIcon{{islike == 0 ? '0' : '1'}}.png"/>
-                    <text class="likenum">{{ likeNum }}</text>
-                </button>
+            <view class="likeBtnWrapper">
+                <image class="likeIcon" src="../images/likeIcon{{islike==0?'0':'1'}}.png" @tap="likeBtnClick"/>
+                <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
     </view>
@@ -97,19 +84,22 @@
             console.log('enter')
         };
 
-        methods = {
-            islike: 0,
+        data = {
+            islike: 0
+        };
 
+        methods = {
             tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
             },
 
             likeBtnClick (e) {
-                console.log('likeClick')
-                if (this.islike === 0) {
+                console.log('likeClick:'+this.islike)
+                if (this.islike == 0) {
                     console.log('like')
                     this.islike = 1
+                    e.currentTarget.src = '../images/likeIcon0.png'
                     this.likeNum = this.likeNum + 1
                     // todo: 告诉后台+1
                 } else {
