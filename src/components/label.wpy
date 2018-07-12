@@ -1,16 +1,46 @@
 <style type="less">
     .labelView {
-        background-color: #cd5c5c;
-        height: 100%;
+        background-color: #B03060;
+        position: relative;
+        display: flex;
+        align-content: center;
+        height:400rpx;
+        width:100%;
     }
     .labelslist {
-        float: left;
+        position: relative;
+        display: flex;
+        align-content: center;
         width:50%;
         height: 100%;
+
     }
     .userIcons {
         float: right;
     }
+    .setting {
+        font-size: 35rpx;
+        margin: 5rpx;
+        background-color: #E9967A;
+        padding-left: 0;
+    }
+    #likeGod {
+        background-color: 	#F08080;
+    }
+    #gallery {
+        background-color: #FF7F50;
+    }
+    #userSetting {
+        background-color: #FF8C00;
+    }
+    #logOut {
+        background-color: #FF6347;
+    }
+    .weui-cell__ft {
+        color: white;
+        display: inline-block;
+    }
+
 </style>
 <template>
     <view class="labelView">
@@ -21,18 +51,38 @@
             <userIcon />
         </view>
     </view>
-    <view class="options">
-        <panel>
-            <view>
-                我的赞
-            </view>
-        </panel>
-        <panel>
-            <view>
-                退出登录
-            </view>
-        </panel>
+    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="likeGod">
+        <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
+        <view class="weui-cell__bd weui-cell_primary">
+            <view>收到的赞</view>
+        </view>
+        <view class="weui-cell__ft">
+            <image src="../images/LikeIcon.png" style="width: 25px;height: 25px;margin-right: 5px;" />
+            15
+        </view>
     </view>
+    <navigator url="./collection" class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="gallery">
+        <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
+        <view class="weui-cell__bd weui-cell_primary">
+            <view>收藏的秘密</view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+    </navigator>
+    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="userSetting">
+        <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
+        <view class="weui-cell__bd weui-cell_primary">
+            <view>设置</view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+    </navigator>
+    <navigator url="./login" class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="logOut">
+        <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
+        <view class="weui-cell__bd weui-cell_primary">
+            <view>退出登陆</view>
+        </view>
+        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+    </navigator>
+
 </template>
 <script>
     import wepy from 'wepy'
@@ -41,7 +91,6 @@
     import Panel from './panel'
     export default class Label extends wepy.component {
         onLoad () {
-            console.log('enter')
         };
         components = {
             labels: Labels,

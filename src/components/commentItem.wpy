@@ -1,0 +1,111 @@
+<style scoped type="less">
+    .comment-item-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px;
+    }
+    .user-icon {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 50%;
+        background-color: #99ddff;
+    }
+    .profilePhoto {
+        width: 100rpx;
+        height: 100rpx;
+        align-content: flex-start;
+    }
+    .comment-content {
+        width: 400rpx;
+        font-size: 11pt;
+        color: #333333;
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+    .comment-time {
+        width: 120rpx;
+        font-size: 20rpx;
+        color: #888888;
+        word-break: break-all;
+    }
+    .likenum {
+        display: inline;
+        font-size: 25rpx;
+        color: #333333;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        width: auto;
+        margin-left: 10rpx;
+    }
+    .likeBtnWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-content: flex-end;
+        margin: 5px;
+        width: auto;
+    }
+    .likeIcon {
+        width: 45rpx;
+        height: 45rpx;
+        position: relative;
+        display: flex;
+        align-content: flex-start;
+    }
+</style>
+
+<template>
+    <view class="comment-item-wrapper" @tap="tapItem">
+        <image class="profilePhoto" src="../images/commentHead.png">
+        <view class="comment-content">
+            {{ content }}
+        </view>
+        <view class="comment-time">
+            {{ time }}
+            <view class="likeBtnWrapper">
+                <image class="likeIcon" src="../images/likeIcon{{{islike}?'1':'0'}}.png"/>
+                <text class="likenum">{{ likeNum }}</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class CommentItem extends wepy.component {
+        props = ['content', 'time', 'islike', 'likeNum'];
+
+        onLoad () {
+            console.log('enter')
+        };
+
+        data = {
+        };
+
+        methods = {
+            tabClick (e) {
+                this.sliderOffset = e.currentTarget.offsetLeft
+                this.activeIndex = e.currentTarget.id
+            },
+
+            // likeBtnClick (e) {
+            //     var that = this;
+            //     that.islike = !that.islike
+            //     console.log('likeClick:'+that.islike)
+            //     if (that.islike == 0) {
+            //         console.log('like')
+            //         // todo: 告诉后台+1
+            //     } else {
+            //         console.log('dislike')
+            //         // todo: 告诉后台-1
+            //     }
+            // }
+        }
+    }
+</script>

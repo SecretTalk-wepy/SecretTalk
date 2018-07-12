@@ -1,0 +1,272 @@
+<style type="less">
+    page, .body{
+        height: 100%;
+        font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+        background-color: #f0eff5;
+    }
+    .header-wrapper {
+        position: relative;
+        display: flex;
+        align-content: center;
+        height: 5rpx;
+    }
+    .weui-tab__panel {
+        margin-bottom: 20rpx;
+        padding-top: 3rpx;
+    }
+    .totallikeAndCommentIcon {
+        width: 50rpx;
+        height: 50rpx;
+        position: relative;
+        display: flex;
+        align-content: flex-start;
+    }
+    .totallikenum, .comment, .collect {
+        display: inline;
+        font-size: 30rpx;
+        color: #333333;
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        margin-left: 4rpx;
+    }
+    .oprationBtn {
+        min-width: 100rpx;
+        width: auto;
+        height: 60rpx;
+        background:transparent;
+        border: none;
+        border-color: transparent;
+        padding-left: 2rpx;
+        padding-right: 2rpx;
+        display: flex;
+        justify-content: space-between;
+    }
+    .oprationBtnWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-content: flex-end;
+        margin: 5px;
+        width: 50%; /*还要调整,最好自适应*/
+        margin-left: 45%;
+    }
+    .divLine{
+        background: #E0E3DA;
+        width: 100%;
+        height: 5rpx;
+    }
+
+    .commentEditArea {
+        height: 230rpx;
+        width: 100%;
+        border-bottom: 1px solid #888888;
+        background-color: #ffffff;
+        word-wrap: break-word;
+        display: block;
+        white-space: pre-line;
+    }
+
+    .commentEditView {
+        width: 100%;
+        position: fixed;
+        /*margin-bottom: 5rpx;*/
+
+    }
+
+    .commentBtn {
+        position: relative;
+        display: flex;
+    }
+
+    .commentEditViewHide{
+        display: none;
+        margin-bottom: 0rpx;
+    }
+
+    .commentEditViewShow{ 
+        display: block;
+        width: 100%;
+        align-content: center;
+        margin: 0rpx;
+        position: fixed;
+        bottom: 0%;
+        border-top: 1px solid #888888;
+    }
+    
+    .cancelBtn, .submitBtn {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+    }
+</style>
+
+<template>
+    <view class="page-wrapper">
+        <!--问题-->
+        <view class="weui-tab__panel">
+            <view class="weui-tab__content">
+                <repeat for="{{shareConversationContent}}" item="item" key="index" index="index">
+                    <shareContent 
+                        :content="item.content"
+                        :time="item.time" />
+                </repeat>
+            </view>
+        </view>
+
+        <!--热度和评论按钮-->
+        <view class="oprationBtnWrapper">
+            <view class="commentBtn" @tap="onChangeShowState">
+                <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
+                <text class="totallikenum">{{totalLikeNum}}</text>
+            </view>
+            <view class="commentBtn" @tap="collectBtnClick">
+                <image class="totallikeAndCommentIcon" src="../images/collect{{isCollect?'1':'0'}}.png"/>
+                <text class="collect">收藏</text>
+            </view>
+            <view class="commentBtn" @tap="commentBtnAreaShowClick">
+                <image class="totallikeAndCommentIcon" src="../images/comment.png"/>
+                <text class="comment">评论</text>
+            </view>
+        </view>
+
+        <!--分割线-->
+        <view class="divLine"></view>
+
+        <!--评论区-->
+        <view class="weui-tab__panel">
+            <view class="weui-tab__content">
+                <repeat for="{{commentList}}" item="item" key="index" index="index">
+                    <commentItem 
+                        :content="item.content"
+                        :time="item.time"
+                        :likeNum="item.likeNum"/>
+                </repeat>
+            </view>
+        </view>
+
+        <!--编辑评论-->
+        <view class="commentEditView{{showView?'Show':'Hide'}}" bindblur="bindTextAreaBlur">
+            <textarea  class="commentEditArea" bindinput="bindInputChange" value="{{commentContent}}"/>
+            <view class="cancelBtn" @tap="commentBtnAreaShowClick">取消</view>
+            <view class="submitBtn" @tap="sendCommentBtnClick">发表</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import ShareContent from '../components/shareContent'
+    import CommentItem from '../components/commentItem'
+
+    export default class ShareContentDetail extends wepy.page {
+        components = {
+            shareContent: ShareContent,
+            commentItem: CommentItem
+        };
+
+        methods = {
+            commentBtnAreaShowClick(e) {
+                this.showView = !this.showView // 显示评论框
+                console.log('show/unshow comment area')
+            },
+
+            bindInputChange(e) {
+                this.commentContent = e.detail.value
+            },
+
+            sendCommentBtnClick (e) {
+                console.log('sending comment')
+                console.log(this.commentContent)
+                if (this.commentContent === '') {
+                    console.log('不能发送空白评论:)')
+                    wx.showModal({
+                        title: '提示',
+                        content:'不能发送空白评论:)',
+                        success: function(res) {
+                            if(res.confirm) {
+                                console.log('用户点击确定')
+                            }
+                        }
+                    })
+                }
+                // todo:: 发表评论
+            },
+
+            bindTextAreaBlur (e) {
+                console.log('lose focus')
+                console.log(e)
+                this.showView = !this.showView
+            },
+
+            collectBtnClick(e) {
+                this.isCollect = !this.isCollect // 显示已收藏
+                console.log((this.isCollect ? 'dis' : '') + 'collect')
+                // todo:: 收藏
+            }
+        }
+
+        data = {
+            totalLikeNum: 99,
+            isCommentEditing: 0,
+            showView: false,
+            isCollect: false,
+            commentContent: '',
+
+            shareConversationContent: [
+                {
+                    id: 1,
+                    content: '找不到对象怎么办',
+                    time: '20180808',
+                    likeNum: 0
+                }
+            ],
+
+            commentList: [
+                {
+                    id: 1,
+                    content: '+1咯',
+                    time: '20180808',
+                    islike: false,
+                    likeNum: 0
+                },
+                {
+                    id: 2,
+                    content: '来自单身狗的忧虑',
+                    time: '20180808',
+                    islike: true,
+                    likeNum: 0
+                },
+                {
+                    id: 3,
+                    content: 'new一个',
+                    time: '20180808',
+                    islike: true,
+                    likeNum: 666
+                },
+                {
+                    id: 4,
+                    content: '我在这里',
+                    time: '20180808',
+                    islike: false,
+                    likeNum: 22
+                },
+                {
+                    id: 5,
+                    content: '我在这里',
+                    time: '20180808',
+                    islike: false,
+                    likeNum: 22
+                },
+                {
+                    id: 6,
+                    content: '我在这里',
+                    time: '20180808',
+                    islike: false,
+                    likeNum: 22
+                }
+            ]
+        }
+    }
+</script>

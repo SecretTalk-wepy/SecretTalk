@@ -23,7 +23,9 @@ export default class extends wepy.app {
             'pages/edit_secret',
             'pages/secret_detail',
             'pages/piazza',
-            'pages/my'
+            'pages/my',
+            'pages/shareContentDetail',
+            'pages/collection'
         ],
         window: {
             backgroundTextStyle: 'light',
@@ -34,7 +36,8 @@ export default class extends wepy.app {
     }
 
     globalData = {
-        userInfo: null
+        userInfo: null,
+        baseUrl: 'http://193.112.125.76:8080'
     }
 
     constructor () {

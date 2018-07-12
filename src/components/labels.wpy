@@ -1,10 +1,44 @@
 <style type="less">
     .labelsView {
         height: 100%;
+        width:100%;
+    }
+    .labelContent {
+        text-align: center;
+        border-collapse: collapse;
+        border:2rpx solid;
+        border-color: #EF4F4F;
+        width: 40%;
+        font-size: large;
+        font-family: "微软雅黑 Light";
+        background-color: white;
+    }
+    panel {
+        margin:5rpx;
+        display: flex;
+        justify-content: center;
+        height: 30%;
+        text-align:center;
+        align-items: center;
     }
 </style>
 <template>
     <view class="labelsView">
+        <panel>
+            <view class="labelContent">
+                90后
+            </view>
+        </panel>
+        <panel>
+            <view class="labelContent">
+                广东人
+            </view>
+        </panel>
+        <panel>
+            <view class="labelContent">
+                巨蟹座
+            </view>
+        </panel>
     </view>
 </template>
 <script>

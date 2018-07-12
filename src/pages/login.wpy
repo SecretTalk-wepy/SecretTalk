@@ -26,7 +26,6 @@
         }
 
         methods = {
-
             /**
              * @method enterLoginPage
              * @desc enter the login in page
@@ -36,13 +35,13 @@
                 this.$root.$navigate({url: './main'})
             }
         }
-        
-        async login() {    
+
+        async login() {
             /* 获取code */
             let loginRes = await wepy.login()
             /* 服务端登录 */
             await wepy.request({
-                url: 'http://193.112.125.76:8080/user/wxlogin',
+                url: `${this.$parent.globalData.baseUrl}/user/wxlogin`,
                 method: 'POST',
                 header: {
                     'content-type': 'application/x-www-form-urlencoded'
@@ -50,8 +49,7 @@
                 data: {
                     code: loginRes.code
                 }
-            });
-            console.log(loginRes)
+            })
         }
     }
 </script>

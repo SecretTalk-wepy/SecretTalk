@@ -1,56 +1,65 @@
 <style type="less">
-    @fontcolor: #7b7b7b;
-    @activecolor: #13b113;
-    .shareView {
-        align-content: center;
-        margin: 20rpx 20rpx 20rpx 20rpx;
-        height: 100rpx;
-        width: 90%;
+    .msg-item-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px;
     }
-
+    .user-icon {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 50%;
+        background-color: #99ddff;
+    }
     .profilePhoto {
-        width: 15%;
-        height: 95%;
+        width: 100rpx;
+        height: 100rpx;
         align-content: flex-start;
     }
-
-    .shareText {
-        color: dimgray;
-        font-size: 40rpx;
-        width: 70%;
-        height: 100rpx;
-        vertical-align:middle;
+    .msg-content {
+        width: 400rpx;
+        font-size: 11pt;
+        color: #333333;
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
     }
-
-    .shareTime {
-        color: darkgray;
-        font-size: 30rpx;
-        width: 8%;
-        text-align: right;
-        position: relative;
+    .msg-time {
+        width: 100rpx;
+        font-size: 11pt;
+        color: #888888;
+        word-break: break-all;
     }
 </style>
 
 <template>
-    <view class="shareView">
+    <view class="msg-item-wrapper" @tap="tapItem">
         <image class="profilePhoto" src="../images/temp_head.png">
-        <text class="shareText">找不到对象怎么办</text>
-        <text class="shareTime">3天前</text>
+        <view class="msg-content">
+            {{ content }}
+        </view>
+        <view class="msg-time">
+            {{ time }}
+        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
 
-    export default class ShareContent extends wepy.component {
-        data = {
+    export default class shareContent extends wepy.component {
+        props = ['content', 'time'];
+
+        onLoad () {
+            console.log('enter')
         };
 
         methods = {
-
-        };
-
-        onLoad () {
+            tapItem (e) {
+                this.$emit('toShareDetail', e)
+            }
         }
     }
 </script>
