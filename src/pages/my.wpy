@@ -4,11 +4,14 @@
         width: 100%;
         border-bottom: 1px solid #888888;
     }
+    page {
+        background-color: #FFE4C4;
+    }
 </style>
 
 <template>
     <view>
-        <text>here is my page</text>
+        <label class="me_page"/>
         <bottomTabBar></bottomTabBar>
     </view>
 </template>
@@ -16,12 +19,14 @@
 <script>
     import wepy from 'wepy'
     import BottomTabBar from '../components/tab'
+    import Label from '../components/label'
 
     export default class MyPage extends wepy.page {
         data = {}
 
         components = {
-            bottomTabBar: BottomTabBar
+            bottomTabBar: BottomTabBar,
+            label: Label
         }
     }
 </script>

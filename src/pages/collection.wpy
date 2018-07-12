@@ -1,0 +1,90 @@
+<style type="less">
+    .weui-navbar__item.weui-bar__item_on {
+        color : #800080;
+        width: 20%;
+    }
+    .tab_item {
+        height: 100%;
+    }
+    page, .body{
+        height: 100%;
+        font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+        background-color: #f0eff5;
+    }
+    .weui-tab__panel {
+        margin-bottom: 20rpx;
+        padding-top: 20rpx;
+    }
+
+</style>
+
+<template>
+    <view>
+        <view class="page__bd">
+            <view class="weui-tab">
+                <view class="weui-tab__panel">
+                    <view class="weui-tab__content">
+                        <repeat for="{{healthContentList}}" key="index" index="index" item="item">
+                            <shareContent
+                                :content="item.content"
+                                :time="item.time" />
+                        </repeat>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <bottomTabBar></bottomTabBar>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import BottomTabBar from '../components/tab'
+    import ShareContent from '../components/shareContent'
+    export default class Collection extends wepy.page {
+        config = {
+            'navigationBarTitleText': '广场'
+        }
+
+        components = {
+            bottomTabBar: BottomTabBar,
+            shareContent: ShareContent
+        }
+
+        data = {
+            activeIndex: 0,
+            sliderOffset: 0,
+            sliderLeft: 0,
+            healthContentList: [
+                {
+                    id: 1,
+                    content: '健康找不到对象怎么办',
+                    time: '20180808'
+                }, {
+                    id: 2,
+                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20184737'
+                }, {
+                    id: 3,
+                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办',
+                    time: '20180808'
+                }
+            ]
+        }
+
+        methods = {
+            tabClick (e) {
+                this.sliderOffset = e.currentTarget.offsetLeft
+                this.activeIndex = e.currentTarget.id
+            }
+        }
+
+        events = {
+            'toShareDetail': (target) => {
+                console.log(target)
+                this.$root.$navigate({url: './shareContentDetail'})
+            }
+        }
+    }
+</script>
