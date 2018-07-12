@@ -94,6 +94,12 @@
         bottom: 0%;
         border-top: 1px solid #888888;
     }
+    
+    .cancelBtn, .submitBtn {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+    }
 </style>
 
 <template>
@@ -143,9 +149,8 @@
         <!--编辑评论-->
         <view class="commentEditView{{showView?'Show':'Hide'}}" bindblur="bindTextAreaBlur">
             <textarea  class="commentEditArea" bindinput="bindInputChange" value="{{commentContent}}"/>
-            <button class="comment" @tap="sendCommentBtnClick">
-                发表评论
-            </button>
+            <view class="cancelBtn" @tap="commentBtnAreaShowClick">取消</view>
+            <view class="submitBtn" @tap="sendCommentBtnClick">发表</view>
         </view>
     </view>
 </template>
