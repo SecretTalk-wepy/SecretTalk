@@ -21,7 +21,7 @@
         display: flex;
         align-content: flex-start;
     }
-    .totallikenum, .comment {
+    .totallikenum, .comment, .collect {
         display: inline;
         font-size: 30rpx;
         color: #333333;
@@ -30,6 +30,7 @@
         word-break: break-all;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
+        margin-left: 4rpx;
     }
     .oprationBtn {
         min-width: 100rpx;
@@ -48,7 +49,8 @@
         justify-content: space-between;
         align-content: flex-end;
         margin: 5px;
-        width: 35%; /*还要调整,最好自适应*/
+        width: 50%; /*还要调整,最好自适应*/
+        margin-left: 45%;
     }
     .divLine{
         background: #E0E3DA;
@@ -57,11 +59,40 @@
     }
 
     .commentEditArea {
-        height: 460rpx;
+        height: 230rpx;
         width: 100%;
         border-bottom: 1px solid #888888;
         background-color: #ffffff;
+        word-wrap: break-word;
+        display: block;
+        white-space: pre-line;
+    }
+
+    .commentEditView {
+        width: 100%;
+        position: fixed;
+        /*margin-bottom: 5rpx;*/
+
+    }
+
+    .commentBtn {
         position: relative;
+        display: flex;
+    }
+
+    .commentEditViewHide{
+        display: none;
+        margin-bottom: 0rpx;
+    }
+
+    .commentEditViewShow{ 
+        display: block;
+        width: 100%;
+        align-content: center;
+        margin: 0rpx;
+        position: fixed;
+        bottom: 0%;
+        border-top: 1px solid #888888;
     }
 </style>
 
@@ -80,10 +111,18 @@
 
         <!--热度和评论按钮-->
         <view class="oprationBtnWrapper">
-            <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
-            <text class="totallikenum">{{totalLikeNum}}</text>
-            <image class="totallikeAndCommentIcon" src="../images/comment.png"/>
-            <text class="comment">评论</text>
+            <view class="commentBtn" @tap="onChangeShowState">
+                <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
+                <text class="totallikenum">{{totalLikeNum}}</text>
+            </view>
+            <view class="commentBtn" @tap="collectBtnClick">
+                <image class="totallikeAndCommentIcon" src="../images/collect{{isCollect?'1':'0'}}.png"/>
+                <text class="collect">收藏</text>
+            </view>
+            <view class="commentBtn" @tap="commentBtnAreaShowClick">
+                <image class="totallikeAndCommentIcon" src="../images/comment.png"/>
+                <text class="comment">评论</text>
+            </view>
         </view>
 
         <!--分割线-->
@@ -102,10 +141,10 @@
         </view>
 
         <!--编辑评论-->
-        <view style="hidden: {{isCommentEditing==0?'true':'flase'}}">
-            <textarea class="commentEditArea" />
-            <button  @tap="sendCommentBtnClick">
-                <text class="comment">发表评论</text>
+        <view class="commentEditView{{showView?'Show':'Hide'}}" bindblur="bindTextAreaBlur">
+            <textarea  class="commentEditArea" bindinput="bindInputChange" value="{{commentContent}}"/>
+            <button class="comment" @tap="sendCommentBtnClick">
+                发表评论
             </button>
         </view>
     </view>
@@ -123,15 +162,52 @@
         };
 
         methods = {
+            commentBtnAreaShowClick(e) {
+                this.showView = !this.showView // 显示评论框
+                console.log('show/unshow comment area')
+            },
+
+            bindInputChange(e) {
+                this.commentContent = e.detail.value
+            },
+
             sendCommentBtnClick (e) {
                 console.log('sending comment')
+                console.log(this.commentContent)
+                if (this.commentContent === '') {
+                    console.log('不能发送空白评论:)')
+                    wx.showModal({
+                        title: '提示',
+                        content:'不能发送空白评论:)',
+                        success: function(res) {
+                            if(res.confirm) {
+                                console.log('用户点击确定')
+                            }
+                        }
+                    })
+                }
                 // todo:: 发表评论
+            },
+
+            bindTextAreaBlur (e) {
+                console.log('lose focus')
+                console.log(e)
+                this.showView = !this.showView
+            },
+
+            collectBtnClick(e) {
+                this.isCollect = !this.isCollect // 显示已收藏
+                console.log((this.isCollect ? 'dis' : '') + 'collect')
+                // todo:: 收藏
             }
         }
 
         data = {
             totalLikeNum: 99,
             isCommentEditing: 0,
+            showView: false,
+            isCollect: false,
+            commentContent: '',
 
             shareConversationContent: [
                 {
@@ -147,24 +223,42 @@
                     id: 1,
                     content: '+1咯',
                     time: '20180808',
+                    islike: false,
                     likeNum: 0
                 },
                 {
                     id: 2,
                     content: '来自单身狗的忧虑',
                     time: '20180808',
+                    islike: true,
                     likeNum: 0
                 },
                 {
                     id: 3,
                     content: 'new一个',
                     time: '20180808',
+                    islike: true,
                     likeNum: 666
                 },
                 {
                     id: 4,
                     content: '我在这里',
                     time: '20180808',
+                    islike: false,
+                    likeNum: 22
+                },
+                {
+                    id: 5,
+                    content: '我在这里',
+                    time: '20180808',
+                    islike: false,
+                    likeNum: 22
+                },
+                {
+                    id: 6,
+                    content: '我在这里',
+                    time: '20180808',
+                    islike: false,
                     likeNum: 22
                 }
             ]
