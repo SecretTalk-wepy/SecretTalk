@@ -25,7 +25,8 @@ export default class extends wepy.app {
             'pages/secret_detail',
             'pages/piazza',
             'pages/my',
-            'pages/shareContentDetail'
+            'pages/shareContentDetail',
+            'pages/collection'
         ],
         window: {
             backgroundTextStyle: 'light',
