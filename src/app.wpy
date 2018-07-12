@@ -1,6 +1,5 @@
 <style lang="less">
 @import './style/weui.less';
-@mainColor : #800080;
 .container {
     height: 100%;
     display: flex;
@@ -37,16 +36,17 @@ export default class extends wepy.app {
     }
 
     globalData = {
-        userInfo: null
+        userInfo: null,
+        baseUrl: 'http://193.112.125.76:8080'
     }
 
     constructor () {
         super()
         this.use('requestfix')
+        this.use('promisify')
     }
 
     onLaunch() {
-        this.testAsync()
     }
 
     sleep (s) {
