@@ -27,21 +27,49 @@
         -webkit-line-clamp: 3;
     }
     .comment-time {
-        width: 100rpx;
+        width: 120rpx;
         font-size: 20rpx;
         color: #888888;
         word-break: break-all;
+    }
+    .likenum {
+        display: inline;
+        font-size: 25rpx;
+        color: #333333;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        width: auto;
+    }
+    .likeBtnWrapper {
+        display: flex;
+        justify-content: space-between;
+        align-content: flex-end;
+        margin: 5px;
+        width: auto;
+    }
+    .likeIcon {
+        width: 45rpx;
+        height: 45rpx;
+        position: relative;
+        display: flex;
+        align-content: flex-start;
     }
 </style>
 
 <template>
     <view class="comment-item-wrapper" @tap="tapItem">
-        <image class="profilePhoto" src="../images/temp_head.png">
+        <image class="profilePhoto" src="../images/commentHead.png">
         <view class="comment-content">
             {{ content }}
         </view>
         <view class="comment-time">
             {{ time }}
+            <view class="likeBtnWrapper">
+                <image class="likeIcon" src="../images/likeIcon{{islike==0?'0':'1'}}.png" @tap="likeBtnClick"/>
+                <text class="likenum">{{ likeNum }}</text>
+            </view>
         </view>
     </view>
 </template>
@@ -50,15 +78,36 @@
     import wepy from 'wepy'
 
     export default class CommentItem extends wepy.component {
-        props = ['content', 'time'];
+        props = ['content', 'time', 'likeNum'];
 
         onLoad () {
             console.log('enter')
         };
 
+        data = {
+            islike: 0
+        };
+
         methods = {
-            tapItem (e) {
-                this.$emit('toShareDetail', e)
+            tabClick (e) {
+                this.sliderOffset = e.currentTarget.offsetLeft
+                this.activeIndex = e.currentTarget.id
+            },
+
+            likeBtnClick (e) {
+                console.log('likeClick:'+this.islike)
+                if (this.islike == 0) {
+                    console.log('like')
+                    this.islike = 1
+                    e.currentTarget.src = '../images/likeIcon0.png'
+                    this.likeNum = this.likeNum + 1
+                    // todo: 告诉后台+1
+                } else {
+                    console.log('dislike')
+                    this.islike = 0
+                    this.likeNum = this.likeNum - 1
+                    // todo: 告诉后台-1
+                }
             }
         }
     }

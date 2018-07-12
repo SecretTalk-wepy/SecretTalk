@@ -14,14 +14,14 @@
         margin-bottom: 20rpx;
         padding-top: 3rpx;
     }
-    .likeAndCommentIcon {
+    .totallikeAndCommentIcon {
         width: 50rpx;
         height: 50rpx;
         position: relative;
         display: flex;
         align-content: flex-start;
     }
-    .likenum, .comment {
+    .totallikenum, .comment {
         display: inline;
         font-size: 30rpx;
         color: #333333;
@@ -48,11 +48,20 @@
         justify-content: space-between;
         align-content: flex-end;
         margin: 5px;
+        width: 35%; /*还要调整,最好自适应*/
     }
     .divLine{
         background: #E0E3DA;
         width: 100%;
         height: 5rpx;
+    }
+
+    .commentEditArea {
+        height: 460rpx;
+        width: 100%;
+        border-bottom: 1px solid #888888;
+        background-color: #ffffff;
+        position: relative;
     }
 </style>
 
@@ -71,14 +80,10 @@
 
         <!--热度和评论按钮-->
         <view class="oprationBtnWrapper">
-            <button class="oprationBtn">
-                <image class="likeAndCommentIcon" src="../images/noLikesIcon.png"/>
-                <text class="likenum">99</text>
-            </button>
-            <button class="oprationBtn">
-                <image class="likeAndCommentIcon" src="../images/comment.png"/>
-                <text class="comment">评论</text>
-            </button>
+            <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
+            <text class="totallikenum">{{totalLikeNum}}</text>
+            <image class="totallikeAndCommentIcon" src="../images/comment.png"/>
+            <text class="comment">评论</text>
         </view>
 
         <!--分割线-->
@@ -90,9 +95,18 @@
                 <repeat for="{{commentList}}" item="item" key="index" index="index">
                     <commentItem 
                         :content="item.content"
-                        :time="item.time" />
+                        :time="item.time"
+                        :likeNum="item.likeNum"/>
                 </repeat>
             </view>
+        </view>
+
+        <!--编辑评论-->
+        <view style="hidden: {{isCommentEditing==0?'true':'flase'}}">
+            <textarea class="commentEditArea" />
+            <button  @tap="sendCommentBtnClick">
+                <text class="comment">发表评论</text>
+            </button>
         </view>
     </view>
 </template>
@@ -108,12 +122,23 @@
             commentItem: CommentItem
         };
 
+        methods = {
+            sendCommentBtnClick (e) {
+                console.log('sending comment')
+                // todo:: 发表评论
+            }
+        }
+
         data = {
+            totalLikeNum: 99,
+            isCommentEditing: 0,
+
             shareConversationContent: [
                 {
                     id: 1,
                     content: '找不到对象怎么办',
-                    time: '20180808'
+                    time: '20180808',
+                    likeNum: 0
                 }
             ],
 
@@ -121,17 +146,26 @@
                 {
                     id: 1,
                     content: '+1咯',
-                    time: '20180808'
+                    time: '20180808',
+                    likeNum: 0
                 },
                 {
                     id: 2,
                     content: '来自单身狗的忧虑',
-                    time: '20180808'
+                    time: '20180808',
+                    likeNum: 0
                 },
                 {
                     id: 3,
                     content: 'new一个',
-                    time: '20180808'
+                    time: '20180808',
+                    likeNum: 666
+                },
+                {
+                    id: 4,
+                    content: '我在这里',
+                    time: '20180808',
+                    likeNum: 22
                 }
             ]
         }
