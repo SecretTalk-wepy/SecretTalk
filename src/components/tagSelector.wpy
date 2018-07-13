@@ -43,13 +43,12 @@
     export default class TagSelector extends wepy.component {
         props = {
             tagsData: {
-                Object,
+                type: Object,
                 twoWay: true
             }
         }
         methods = {
             selectTag(index) {
-                console.log(index)
                 this.tagsData.target = index
             }
         }

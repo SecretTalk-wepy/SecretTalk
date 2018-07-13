@@ -59,15 +59,15 @@
             },
 
             navigateToMainPage() {
-                this.$root.$navigate({url: '../pages/main'})
+                this.$root.$redirect({url: '../pages/main'})
             },
 
             navigateToPiazzaPage() {
-                this.$root.$navigate({url: '../pages/piazza'})
+                this.$root.$redirect({url: '../pages/piazza'})
             },
 
             navigateToMyPage() {
-                this.$root.$navigate({url: '../pages/my'})
+                this.$root.$redirect({url: '../pages/my'})
             }
         };
 
