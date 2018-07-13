@@ -37,26 +37,27 @@ export default class extends wepy.app {
             navigationBarBackgroundColor: '#800080'
         },
         tabBar: {
-            'color': '#bbbbbb',
-            'selectedColor': '#800080',
-            'list': [
+
+            "color": "#bbbbbb",
+            "selectedColor": "#800080",
+            "list": [
                 {
-                    'pagePath': 'pages/main',
-                    'text': '秘密',
-                    'iconPath': 'images/secret.png',
-                    'selectedIconPath': 'images/secret.png'
+                    "pagePath": "pages/main",
+                    "text": "秘密",
+                    "iconPath": "images/secret.png",
+                    "selectedIconPath": "images/secret.png"
                 },
                 {
-                    'pagePath': 'pages/piazza',
-                    'text': '广场',
-                    'iconPath': 'images/discovery.png',
-                    'selectedIconPath': 'images/discovery.png'
+                    "pagePath": "pages/collection",
+                    "text": "广场",
+                    "iconPath": "images/discovery.png",
+                    "selectedIconPath": "images/discovery.png"
                 },
                 {
-                    'pagePath': 'pages/my',
-                    'text': '我的',
-                    'iconPath': 'images/me.png',
-                    'selectedIconPath': 'images/me.png'
+                    "pagePath": "pages/my",
+                    "text": "我的",
+                    "iconPath": "images/me.png",
+                    "selectedIconPath": "images/me.png"
                 }
             ]
         }

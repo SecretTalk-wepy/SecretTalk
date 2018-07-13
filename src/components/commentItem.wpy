@@ -1,4 +1,4 @@
-<style type="less" scoped>
+<style scoped type="less">
     .comment-item-wrapper {
         display: flex;
         justify-content: space-between;
