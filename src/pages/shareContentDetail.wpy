@@ -95,7 +95,14 @@
         border-top: 1px solid #888888;
     }
     
-    .cancelBtn, .submitBtn {
+    .cancelBtn {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+    } 
+    
+    .submitBtn {
+        color : #800080;
         width: 50%;
         display: inline-block;
         text-align: center;
@@ -141,6 +148,7 @@
                     <commentItem 
                         :content="item.content"
                         :time="item.time"
+                        :islike="item.islike"
                         :likeNum="item.likeNum"/>
                 </repeat>
             </view>
@@ -183,9 +191,9 @@
                     console.log('不能发送空白评论:)')
                     wx.showModal({
                         title: '提示',
-                        content:'不能发送空白评论:)',
+                        content: '不能发送空白评论:)',
                         success: function(res) {
-                            if(res.confirm) {
+                            if (res.confirm) {
                                 console.log('用户点击确定')
                             }
                         }
@@ -256,7 +264,7 @@
                     id: 5,
                     content: '我在这里',
                     time: '20180808',
-                    islike: false,
+                    islike: true,
                     likeNum: 22
                 },
                 {

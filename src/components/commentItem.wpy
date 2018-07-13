@@ -57,6 +57,7 @@
         display: flex;
         align-content: flex-start;
     }
+
 </style>
 
 <template>
@@ -68,7 +69,7 @@
         <view class="comment-time">
             {{ time }}
             <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{{islike}?'1':'0'}}.png"/>
+                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" data-item="{{item}}" @tap="likeBtnClick"/>
                 <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
@@ -86,6 +87,7 @@
         };
 
         data = {
+            // islike: false
         };
 
         methods = {
@@ -94,18 +96,18 @@
                 this.activeIndex = e.currentTarget.id
             },
 
-            // likeBtnClick (e) {
-            //     var that = this;
-            //     that.islike = !that.islike
-            //     console.log('likeClick:'+that.islike)
-            //     if (that.islike == 0) {
-            //         console.log('like')
-            //         // todo: 告诉后台+1
-            //     } else {
-            //         console.log('dislike')
-            //         // todo: 告诉后台-1
-            //     }
-            // }
+            likeBtnClick (e) {
+                // that.data.islike = !that.data.islike
+                console.log(e)
+                if (e.currentTarget.dataset.islikeon) {
+                    console.log('dislike')
+                    // todo: 告诉后台-1
+                } else {
+                    console.log('like')
+                    // todo: 告诉后台+1
+                }
+                e.currentTarget.dataset.islikeon = !e.currentTarget.dataset.islikeon
+            }
         }
     }
 </script>
