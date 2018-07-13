@@ -14,12 +14,7 @@
         width: 400rpx;
         font-size: 11pt;
         color: #333333;
-        display: -webkit-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
         word-break: break-all;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
     }
     .msg-time {
         width: 100rpx;
@@ -30,7 +25,7 @@
 </style>
 <template>
     <view class="msg-item-wrapper" @tap="tapItem">
-        <view class="user-icon" style="background-color: {{color}}">
+        <view class="user-icon">
         </view>
         <view class="msg-content">
             {{ content }}
@@ -44,14 +39,7 @@
     import wepy from 'wepy'
 
     export default class MsgItem extends wepy.component {
-        props = {
-            content: String,
-            time: String,
-            color: {
-                type: String,
-                default: '#ffffff'
-            }
-        };
+        props = ['content', 'time'];
 
         onLoad () {
             console.log('enter')

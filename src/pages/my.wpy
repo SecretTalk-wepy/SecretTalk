@@ -12,7 +12,6 @@
 <template>
     <view>
         <label class="me_page"/>
-        <bottomTabBar></bottomTabBar>
     </view>
 </template>
 

@@ -32,7 +32,7 @@
              */
             enterLoginPage: async function () {
                 await this.login()
-                this.$root.$navigate({url: './main'})
+                wx.switchTab({url: './main'})
             }
         }
 
