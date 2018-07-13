@@ -116,8 +116,11 @@
             <view class="weui-tab__content">
                 <repeat for="{{shareConversationContent}}" item="item" key="index" index="index">
                     <shareContent 
-                        :content="item.content"
-                        :time="item.time" />
+                        :messageId="item.messageId"
+                        :message="item.message"
+                        :timestamp="item.timestamp"
+                        :likeNum="item.likeNum"
+                        :messageType="item.messageType" />
                 </repeat>
             </view>
         </view>
@@ -184,7 +187,11 @@
                 this.commentContent = e.detail.value
             },
 
-            sendCommentBtnClick (e) {
+            async tapSendSecret() {
+                
+            },
+
+            async sendCommentBtnClick (e) {
                 console.log('sending comment')
                 console.log(this.commentContent)
                 if (this.commentContent === '') {
@@ -199,7 +206,14 @@
                         }
                     })
                 }
-                // todo:: 发表评论
+                // 发表评论
+                // let postBody = {}
+                // this.queryItems.forEach(item => {
+                //   postBody[item.name] = item.target  
+                // })
+                // postBody.userId = wx.getStorageSync('userId')
+                // postBody.content = this.secretContent
+                // await this.sendData(postBody);
             },
 
             bindTextAreaBlur (e) {
@@ -215,6 +229,15 @@
             }
         }
 
+        async sendData(postBody) {
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/secret/sendSecret`,
+                method: 'POST',
+                data: postBody
+            })
+            console.log(res)
+        }
+
         data = {
             totalLikeNum: 99,
             isCommentEditing: 0,
@@ -224,53 +247,53 @@
 
             shareConversationContent: [
                 {
-                    id: 1,
-                    content: '找不到对象怎么办',
-                    time: '20180808',
-                    likeNum: 0
+                    messageId: 1,
+                    message: '找不到对象怎么办',
+                    timestamp: '20180808',
+                    likeNum: 0,
                 }
             ],
 
             commentList: [
                 {
-                    id: 1,
-                    content: '+1咯',
-                    time: '20180808',
+                    messageId: 1,
+                    message: '+1咯',
+                    timestamp: '20180808',
                     islike: false,
                     likeNum: 0
                 },
                 {
-                    id: 2,
-                    content: '来自单身狗的忧虑',
-                    time: '20180808',
+                    messageId: 2,
+                    message: '来自单身狗的忧虑',
+                    timestamp: '20180808',
                     islike: true,
                     likeNum: 0
                 },
                 {
-                    id: 3,
-                    content: 'new一个',
-                    time: '20180808',
+                    messageId: 3,
+                    message: 'new一个',
+                    timestamp: '20180808',
                     islike: true,
                     likeNum: 666
                 },
                 {
-                    id: 4,
-                    content: '我在这里',
-                    time: '20180808',
+                    messageId: 4,
+                    message: '我在这里',
+                    timestamp: '20180808',
                     islike: false,
                     likeNum: 22
                 },
                 {
-                    id: 5,
-                    content: '我在这里',
+                    messageId: 5,
+                    message: '我在这里',
                     time: '20180808',
                     islike: true,
                     likeNum: 22
                 },
                 {
-                    id: 6,
+                    messageId: 6,
                     content: '我在这里',
-                    time: '20180808',
+                    timestamp: '20180808',
                     islike: false,
                     likeNum: 22
                 }

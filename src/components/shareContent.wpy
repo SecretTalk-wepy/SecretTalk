@@ -38,10 +38,10 @@
     <view class="msg-item-wrapper" @tap="tapItem">
         <image class="profilePhoto" src="../images/temp_head.png">
         <view class="msg-content">
-            {{ content }}
+            {{ message }}
         </view>
         <view class="msg-time">
-            {{ time }}
+            {{ timestamp }}
         </view>
     </view>
 </template>
@@ -50,10 +50,14 @@
     import wepy from 'wepy'
 
     export default class shareContent extends wepy.component {
-        props = ['content', 'time'];
+        props = ['messageId', 'message','timestamp','likeNum', 'messageType'];
+
+        data = {
+            // messageId:'666'
+        }
 
         onLoad () {
-            console.log('enter')
+            // console.log('enter')
         };
 
         methods = {

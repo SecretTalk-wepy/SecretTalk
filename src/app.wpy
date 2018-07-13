@@ -1,6 +1,5 @@
 <style lang="less">
 @import './style/weui.less';
-@mainColor : #800080;
 .container {
     height: 100%;
     display: flex;
@@ -8,6 +7,9 @@
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
+}
+page {
+    background-color: #f6f6f6;
 }
 </style>
 
@@ -33,20 +35,45 @@ export default class extends wepy.app {
             navigationBarTitleText: 'WeChat',
             navigationBarTextStyle: 'white',
             navigationBarBackgroundColor: '#800080'
+        },
+        tabBar: {
+            'color': '#bbbbbb',
+            'selectedColor': '#800080',
+            'list': [
+                {
+                    'pagePath': 'pages/main',
+                    'text': '秘密',
+                    'iconPath': 'images/secret.png',
+                    'selectedIconPath': 'images/secret.png'
+                },
+                {
+                    'pagePath': 'pages/piazza',
+                    'text': '广场',
+                    'iconPath': 'images/discovery.png',
+                    'selectedIconPath': 'images/discovery.png'
+                },
+                {
+                    'pagePath': 'pages/my',
+                    'text': '我的',
+                    'iconPath': 'images/me.png',
+                    'selectedIconPath': 'images/me.png'
+                }
+            ]
         }
     }
 
     globalData = {
-        userInfo: null
+        userInfo: null,
+        baseUrl: 'http://193.112.125.76:8080'
     }
 
     constructor () {
         super()
         this.use('requestfix')
+        this.use('promisify')
     }
 
     onLaunch() {
-        this.testAsync()
     }
 
     sleep (s) {

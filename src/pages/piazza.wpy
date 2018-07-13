@@ -37,43 +37,57 @@
                     <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                         <repeat for="{{healthContentList}}" key="index" index="index" item="item">
                             <shareContent 
-                                :content="item.content"
-                                :time="item.time" />
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
                         </repeat>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                         <repeat for="{{WorkplaceContentList}}" key="index" index="index" item="item">
                             <shareContent 
-                                :content="item.content"
-                                :time="item.time" />
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
                         </repeat>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 2}}">
                         <repeat for="{{emotionContentList}}" key="index" index="index" item="item">
                             <shareContent 
-                                :content="item.content"
-                                :time="item.time" />
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
                         </repeat>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 3}}">
                         <repeat for="{{marriageContentList}}" key="index" index="index" item="item">
                             <shareContent 
-                                :content="item.content"
-                                :time="item.time" />
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
                         </repeat>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 4}}">
                         <repeat for="{{otherContentList}}" key="index" index="index" item="item">
                             <shareContent 
-                                :content="item.content"
-                                :time="item.time" />
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
                         </repeat>
                     </view>
                 </view>
             </view>
         </view>
 
-        <bottomTabBar></bottomTabBar>
     </view>
 </template>
 
@@ -99,105 +113,89 @@
             activeIndex: 0,
             sliderOffset: 0,
             sliderLeft: 0,
-            healthContentList: [
-                {
-                    id: 1,
-                    content: '健康找不到对象怎么办',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20180808'
-                }
-            ],
 
-            WorkplaceContentList: [
-                {
-                    id: 1,
-                    content: '职场找不到对象怎么办',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    content: '职场找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    content: '职场找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20180808'
-                }
-            ],
-
-            emotionContentList: [
-                {
-                    id: 1,
-                    content: '情感找不到对象怎么办',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    content: '情感找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    content: '情感找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20180808'
-                }
-            ],
-
-            marriageContentList: [
-                {
-                    id: 1,
-                    content: '婚姻找不到对象怎么办',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    content: '婚姻找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    content: '婚姻找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20180808'
-                }
-            ],
-
-            otherContentList: [
-                {
-                    id: 1,
-                    content: '其他找不到对象怎么办',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    content: '其他找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    content: '其他找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20180808'
-                }
-            ]
+            healthContentList: [],
+            WorkplaceContentList: [],
+            emotionContentList: [],
+            marriageContentList: [],
+            otherContentList: []
         }
 
         methods = {
-            tabClick (e) {
+            async tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
+
+                let postBody = {}
+                // postBody.userId = wx.getStorageSync('userId')
+                postBody.type = parseInt(this.activeIndex)
+                postBody.page = 0
+                postBody.size = 5
+                console.log(postBody)
+                await this.sendData(postBody);
+            }
+        }
+
+        async sendData(postBody) {
+            var that = this;
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/square/index`,
+                method: 'POST',
+                data: postBody
+            })
+            console.log(res.data.respondBody)
+
+            if (postBody.type === 0) {
+                that.setData({
+                    healthContentList:res.data.respondBody
+                });
+                // await wepy.setStorage({
+                //     key: 'defaultPiazzaHealthyData',
+                //     data: res.data.respondBody
+                // })
+            } else if (postBody.type === 1) {
+                that.setData({
+                    WorkplaceContentList:res.data.respondBody
+                });
+            } else if (postBody.type === 2) {
+                that.setData({
+                    emotionContentList:res.data.respondBody
+                });
+            } else if (postBody.type === 3) {
+                that.setData({
+                    marriageContentList:res.data.respondBody
+                });
+            } else if (postBody.type === 4) {
+                that.setData({
+                    otherContentList:res.data.respondBody
+                });
             }
         }
 
         events = {
             'toShareDetail': (target) => {
+                console.log('toShareDetail:')
                 console.log(target)
                 this.$root.$navigate({url: './shareContentDetail'})
             }
         }
 
-        onLoad () {
+        async onLoad () {
+            console.log('piazza onload')
             let res = wx.getSystemInfoSync()
             this.sliderLeft = (res.windowWidth / this.shareContentClass.length - sliderWidth) / 5
             this.sliderOffset = res.windowWidth / this.shareContentClass.length * this.activeIndex
+        }
+
+        async onShow () {
+            console.log('piazza onshow')
+            let postBody = {}
+            // postBody.userId = wx.getStorageSync('userId')
+            postBody.type = parseInt(this.activeIndex)
+            postBody.page = 0
+            postBody.size = 5
+            console.log(postBody)
+            await this.sendData(postBody);
         }
     }
 </script>
