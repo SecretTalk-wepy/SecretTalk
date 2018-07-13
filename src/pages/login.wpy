@@ -40,7 +40,7 @@
             /* 获取code */
             let loginRes = await wepy.login()
             /* 服务端登录 */
-            await wepy.request({
+            let res = await wepy.request({
                 url: `${this.$parent.globalData.baseUrl}/user/wxlogin`,
                 method: 'POST',
                 header: {
@@ -49,6 +49,10 @@
                 data: {
                     code: loginRes.code
                 }
+            })
+            await wepy.setStorage({
+                key: 'userId',
+                data: res.data.respondBody.userId
             })
         }
     }
