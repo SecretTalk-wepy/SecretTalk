@@ -1,0 +1,218 @@
+<style type="less">
+    .weui-navbar__item.weui-bar__item_on {
+        color : #800080;
+        width: 20%;
+    }
+    .tab_item {
+        height: 100%;
+    }
+    page, .body{
+        height: 100%;
+        font-family: '\5FAE\8F6F\96C5\9ED1', arial;
+        background-color: #f0eff5;
+    }
+    .header-wrapper {
+        position: relative;
+        display: flex;
+        align-content: center;
+        height: 60rpx;
+    }
+    .weui-tab__panel {
+        margin-bottom: 100rpx;
+    }
+
+</style>
+
+<template>
+    <view>
+        <view class="page__bd">
+            <view class="weui-tab">
+                <view class="weui-navbar">
+                    <view wx:for="{{shareContentClass}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+                        <view class="weui-navbar__title">{{item}}</view>
+                    </view>
+                    <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px); width:20%"></view>
+                </view>
+                <view class="weui-tab__panel">
+                    <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                        <repeat for="{{healthContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
+                        </repeat>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                        <repeat for="{{WorkplaceContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
+                        </repeat>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 2}}">
+                        <repeat for="{{emotionContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
+                        </repeat>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 3}}">
+                        <repeat for="{{marriageContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
+                        </repeat>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 4}}">
+                        <repeat for="{{otherContentList}}" key="index" index="index" item="item">
+                            <shareContent 
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
+                        </repeat>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import BottomTabBar from '../components/tab'
+    import ShareContent from '../components/shareContent'
+
+    const sliderWidth = 38
+    
+    export default class Piazza extends wepy.page {
+        config = {
+            'navigationBarTitleText': '广场'
+        }
+
+        components = {
+            bottomTabBar: BottomTabBar,
+            shareContent: ShareContent
+        }
+
+        data = {
+            shareContentClass: ['健康', '职场', '情感', '婚姻', '其他'],
+            activeIndex: 0,
+            sliderOffset: 0,
+            sliderLeft: 0,
+
+            healthContentList: [],
+            WorkplaceContentList: [],
+            emotionContentList: [],
+            marriageContentList: [],
+            otherContentList: [],
+
+            loadPage: 0,
+            loadSize: 5
+        }
+
+        methods = {
+            async tabClick (e) {
+                this.sliderOffset = e.currentTarget.offsetLeft
+                this.activeIndex = e.currentTarget.id
+
+                let postBody = {}
+                // postBody.userId = wx.getStorageSync('userId')
+                postBody.type = parseInt(this.activeIndex)
+                postBody.page = this.loadPage
+                postBody.size = this.loadSize
+                console.log(postBody)
+                await this.sendData(postBody);
+            }
+        }
+
+        async sendData(postBody) {
+            var that = this;
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/square/index`,
+                method: 'POST',
+                data: postBody
+            })
+            console.log(res.data.respondBody)
+
+            if (postBody.type === 0) {
+                that.setData({
+                    healthContentList: res.data.respondBody
+                });
+                // await wepy.setStorage({
+                //     key: 'defaultPiazzaHealthyData',
+                //     data: res.data.respondBody
+                // })
+            } else if (postBody.type === 1) {
+                that.setData({
+                    WorkplaceContentList: res.data.respondBody
+                });
+            } else if (postBody.type === 2) {
+                that.setData({
+                    emotionContentList: res.data.respondBody
+                });
+            } else if (postBody.type === 3) {
+                that.setData({
+                    marriageContentList: res.data.respondBody
+                });
+            } else if (postBody.type === 4) {
+                that.setData({
+                    otherContentList: res.data.respondBody
+                });
+            }
+        }
+
+        events = {
+            async toShareDetail(target) {
+                console.log('toShareDetail:')
+                console.log(target.messageId)
+                var msgid = target.messageId
+                await wepy.setStorage({
+                    key: 'msgId',
+                    data: msgid
+                })
+                this.$root.$redirect({url: './shareContentDetail'})
+            }
+        }
+
+        async onLoad () {
+            console.log('piazza onload')
+            let res = wx.getSystemInfoSync()
+            this.sliderLeft = (res.windowWidth / this.shareContentClass.length - sliderWidth) / 5
+            this.sliderOffset = res.windowWidth / this.shareContentClass.length * this.activeIndex
+        }
+
+        async onShow () {
+            console.log('piazza onshow')
+            let postBody = {}
+            postBody.type = parseInt(this.activeIndex)
+            postBody.page = this.loadPage
+            postBody.size = this.loadSize
+            console.log(postBody)
+            await this.sendData(postBody);
+
+            // this.healthContentList = [
+            //     {
+            //         messageId: "666",
+            //         timestamp: 20180909,
+            //         likeNum: 22,
+            //         messageType: 0,
+            //         message: "testtes"
+            //     }
+            // ]
+        }
+    }
+</script>
