@@ -1,6 +1,7 @@
 <style type="less">
     .labelView {
         background-color: #B03060;
+        height: 35%;
     }
     .labelslist {
         position: relative;
@@ -45,7 +46,7 @@
         font-family: "微软雅黑 Light";
         background-color: white;
     }
-    .panel {
+    panel {
         margin:5rpx;
         display: flex;
         justify-content: center;
@@ -83,14 +84,6 @@
         </view>
         <view class="userIcon">
         </view>
-        <view class="labelView">
-            <view class = "labelslist">
-                <labels />
-            </view>
-            <view class="userIcons">
-                <userIcon />
-            </view>
-        </view>
     </view>
     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="likeGod">
         <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
@@ -99,7 +92,7 @@
         </view>
         <view class="weui-cell__ft">
             <image src="../images/LikeIcon.png" style="width: 25px;height: 25px;margin-right: 5px;" />
-            15
+            {{likeGor}}
         </view>
     </view>
     <navigator url="./collection" class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="gallery">
@@ -132,7 +125,10 @@
         props = {
             userLabelList: {
                 twoWay: true
-            }
+            },
+            likeGor: 1,
+            collectionList: []
+
         };
 
         components = {
