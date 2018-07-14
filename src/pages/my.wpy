@@ -11,7 +11,7 @@
 
 <template>
     <view>
-        <label class="me_page"/>
+        <label class="me_page" :userLabelList.async="currentLabel"  :collectionList="collections" :likeGor="likeGor"/>
     </view>
 </template>
 
@@ -21,8 +21,27 @@
     import Label from '../components/label'
 
     export default class MyPage extends wepy.page {
-        data = {}
-
+        data = {
+            collections: [],
+            likeGor: 0,
+            userLabelList: []
+        }
+        async sendData() {
+            var id = wx.getStorageSync('userId')
+            var that = this
+            let res = await wepy.request({
+                url: `${that.$parent.globalData.baseUrl}/user/userId/${id}`,
+                method: 'GET'
+            })
+            this.collections = res.data.respondBody.collections
+            this.likeGor = res.data.respondBody.likeNum
+            this.$apply()
+            console.log(res.data)
+        }
+        onLoad () {
+            var id = wx.getStorageSync('userId')
+            this.sendData()
+        };
         components = {
             bottomTabBar: BottomTabBar,
             label: Label

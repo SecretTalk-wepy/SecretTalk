@@ -19,7 +19,7 @@
 <template>
     <view class="containers">
         <image src="../images/start.jpg" mode="aspectFill"/>
-        <button @tap="enterLoginPage">
+        <button @tap="enterLoginPage" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
             <image src="../images/login.png" z-index="-1" class="loginButton"/>
         </button>
     </view>
@@ -41,6 +41,9 @@
             enterLoginPage: async function () {
                 await this.login()
                 this.$root.$switch({url: './main'})
+            },
+            bindGetUserInfo(res) {
+                console.log(res)
             }
         }
 
