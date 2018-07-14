@@ -84,7 +84,7 @@
 <script>
     import wepy from 'wepy'
     import MsgItem from '../components/msgItem'
-    import { avatarColor } from '../utils/avatarColor.js'
+    import { avatarColor, timeResolver } from '../utils/utils.js'
 
     const sliderWidth = 96
     let userId
@@ -167,7 +167,7 @@
                     bottleId: key,
                     content: content,
                     color: avatarColor != null ? avatarColor(strangerId || '0') : '#ddffff',
-                    time: new Date(timestamp).toString().substr(10, 12)
+                    time: timeResolver(timestamp)
                 }
             })
             return recvList.reverse()
@@ -186,7 +186,7 @@
                     bottleId: key,
                     content: content,
                     color: avatarColor != null ? avatarColor(strangerId || '0') : '#ddffff',
-                    time: new Date(timestamp).toString().substr(10, 12)
+                    time: timeResolver(timestamp)
                 }
             })
             return sentList.reverse()

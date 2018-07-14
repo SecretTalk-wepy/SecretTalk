@@ -9,11 +9,11 @@
         position: fixed;
     }
     .loginButton {
-        height: 200rpx;
-        width:200rpx;
+        height: 160rpx;
+        width:160rpx;
         position:fixed;
         bottom:30%;
-        left:37.5%;
+        left:295rpx;
     }
 </style>
 <template>

@@ -23,7 +23,7 @@
     }
     .msg-time {
         width: 100rpx;
-        font-size: 11pt;
+        font-size: 9pt;
         color: #888888;
         word-break: break-all;
     }
