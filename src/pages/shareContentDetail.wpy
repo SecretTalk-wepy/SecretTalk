@@ -177,7 +177,9 @@
 
     export default class ShareContentDetail extends wepy.page {
         config = {
-            'onReachBottomDistance': -1
+            'onReachBottomDistance': -1,
+            'enablePullDownRefresh': true,
+            'backgroundTextStyle': 'dark'
         }
 
         components = {
@@ -191,8 +193,6 @@
             commentBtnAreaShowClick(e) {
                 this.showView = !this.showView // 显示评论框
                 console.log('show/unshow comment area')
-                console.log(this.messageId)
-                console.log(this)
             },
 
             bindInputChange(e) {
@@ -201,7 +201,6 @@
 
             async sendCommentBtnClick (e) {
                 console.log('sending comment')
-                console.log(this.commentContent)
                 if (this.commentContent === '') {
                     console.log('不能发送空白评论:)')
                     wx.showModal({
@@ -218,19 +217,16 @@
                     postBody.userId = wx.getStorageSync('userId')
                     postBody.squareMessageId = this.messageId
                     postBody.comment = this.commentContent
-                    console.log(postBody)
                     await this.sendData(postBody);
 
                     var that = this
-                    that.setData({
-                        showView: false
-                    })
+                    that.showView = false
+                    that.$apply()
                 }
             },
 
             bindTextAreaBlur (e) {
                 console.log('lose focus')
-                console.log(e)
                 this.showView = !this.showView
             },
 
@@ -262,7 +258,6 @@
                 }
                 that.$apply()
                 console.log('piazza detail collectBtnClick after this data:')
-                console.log(that.data)
             }
         }
 
@@ -284,7 +279,6 @@
                 })
             }
             console.log('make comment btn click')
-            console.log(res)
             // 发送完评论后自动刷新
             this.showView = !this.showView
             await this.getMsgAndComments()
@@ -304,7 +298,6 @@
             
             // 渲染数据
             console.log('getMsgAndComments:')
-            console.log(res.data)
             let commentList = res.data.respondBody.comments.map((session) => {
                 let {comment, commitId, likeNum, timeStamp, userId} = session
                 return {
@@ -328,16 +321,23 @@
                     collectNum: res.data.respondBody.collectNum
                 }
             ]
-            console.log(new Date(res.data.respondBody.timestamp).toString())
             self.$apply()
             console.log('piazza getMsgAndComments after this')
-            console.log(this)
         }
 
         async onShow() {
             this.messageId = wx.getStorageSync('msgId')
             console.log('msg-detail-page onShow:')
             // console.log(this.messageId)
+            await this.getMsgAndComments()
+        }
+
+        async onPullDownRefresh() {
+            console.log('detal onPullDownRefresh')
+            setTimeout(function () {
+                // 不加这个方法真机下拉会一直处于刷新状态，无法复位
+                wepy.stopPullDownRefresh()
+            }, 3000)
             await this.getMsgAndComments()
         }
 

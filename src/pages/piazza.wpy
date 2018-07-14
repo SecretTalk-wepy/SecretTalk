@@ -65,7 +65,7 @@
                     <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px); width:20%"></view>
                 </view>
                 <view class="weui-tab__panel">
-                    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                    <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                         <repeat for="{{healthContentList}}" key="index" index="index" item="item">
                             <shareContent 
                                 :messageId="item.messageId"
@@ -75,8 +75,8 @@
                                 :messageType="item.messageType" />
                         </repeat>
                         <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>                
-                    </scroll-view>
-                    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                         <repeat for="{{WorkplaceContentList}}" key="index" index="index" item="item">
                             <shareContent 
                                 :messageId="item.messageId"
@@ -86,8 +86,8 @@
                                 :messageType="item.messageType" />
                         </repeat>
                         <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
-                    </scroll-view>
-                    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="weui-tab__content" hidden="{{activeIndex != 2}}">
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 2}}">
                         <repeat for="{{emotionContentList}}" key="index" index="index" item="item">
                             <shareContent 
                                 :messageId="item.messageId"
@@ -97,8 +97,8 @@
                                 :messageType="item.messageType" />
                         </repeat>
                         <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
-                    </scroll-view>
-                    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="weui-tab__content" hidden="{{activeIndex != 3}}">
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 3}}">
                         <repeat for="{{marriageContentList}}" key="index" index="index" item="item">
                             <shareContent 
                                 :messageId="item.messageId"
@@ -108,8 +108,8 @@
                                 :messageType="item.messageType" />
                         </repeat>
                         <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
-                    </scroll-view>
-                    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="weui-tab__content" hidden="{{activeIndex != 4}}">
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 4}}">
                         <repeat for="{{otherContentList}}" key="index" index="index" item="item">
                             <shareContent 
                                 :messageId="item.messageId"
@@ -119,7 +119,7 @@
                                 :messageType="item.messageType" />
                         </repeat>
                         <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
-                    </scroll-view>
+                    </view>
                 </view>
             </view>
         </view>
@@ -137,7 +137,9 @@
     
     export default class Piazza extends wepy.page {
         config = {
-            'navigationBarTitleText': '广场'
+            'navigationBarTitleText': '广场',
+            'enablePullDownRefresh': true,
+            'backgroundTextStyle': 'dark'
         }
 
         components = {
@@ -180,21 +182,6 @@
 
                 await that.fetchData();
                 that.$apply()
-            },
-
-            // 滚动到底部触发事件
-            async searchScrollLower() {
-                console.log('piazza searchScrollLower')
-                
-                let that = this;
-                console.log(that.data.searchLoading)
-                console.log(!that.data.searchLoadingComplete)
-                if(!that.data.searchLoadingComplete){
-                    console.log('piazza searchScrollLower in')
-                    that.isFromSearch = false  // 触发到上拉事件，把isFromSearch设为为false
-                    await that.fetchData();
-                }
-                that.$apply()
             }
         }
 
@@ -221,7 +208,6 @@
                 size: this.loadSize
             }
             console.log('piazza getSearchSecrete postBody:')
-            console.log(postBody)
             let res = await wepy.request({
                 url: `${this.$parent.globalData.baseUrl}/square/index`,
                 method: 'POST',
@@ -297,7 +283,6 @@
                     '4': 0
                 },  //第一次加载，设置0
                 isFromSearch: true,  //第一次加载，设置true
-                searchLoading: true,  //把"上拉加载"的变量设为true，显示
                 searchLoadingComplete:false //把“没有数据”设为false，隐藏
             })
         }
@@ -311,6 +296,32 @@
             console.log('onReachBottom')
 
             await this.fetchData();
+        }
+
+        async onPullDownRefresh() {
+            console.log('onPullDownRefresh')
+            setTimeout(function () {
+                // 不加这个方法真机下拉会一直处于刷新状态，无法复位
+                wepy.stopPullDownRefresh()
+            }, 3000)
+
+            let that = this
+            that.loadPage = {
+                    '0': 0,
+                    '1': 0,
+                    '2': 0,
+                    '3': 0,
+                    '4': 0
+                },
+            that.isFromSearch = true,
+            that.searchLoadingComplete = false,
+            that.healthContentList= [],
+            that.WorkplaceContentList= [],
+            that.emotionContentList= [],
+            that.marriageContentList= [],
+            that.otherContentList= [],
+            that.$apply()
+            await that.fetchData()
         }
         
         events = {
