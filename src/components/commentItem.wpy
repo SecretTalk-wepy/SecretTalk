@@ -1,4 +1,4 @@
-<style type="less">
+<style type="less" scoped>
     .comment-item-wrapper {
         display: flex;
         justify-content: space-between;
@@ -28,7 +28,7 @@
     }
     .comment-time {
         width: 120rpx;
-        font-size: 20rpx;
+        font-size: 15rpx;
         color: #888888;
         word-break: break-all;
     }
@@ -41,6 +41,7 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
         width: auto;
+        margin-left: 10rpx;
     }
     .likeBtnWrapper {
         display: flex;
@@ -56,18 +57,19 @@
         display: flex;
         align-content: flex-start;
     }
+
 </style>
 
 <template>
-    <view class="comment-item-wrapper" @tap="tapItem">
+    <view class="comment-item-wrapper">
         <image class="profilePhoto" src="../images/commentHead.png">
         <view class="comment-content">
-            {{ content }}
+            {{ comment }}
         </view>
         <view class="comment-time">
-            {{ time }}
+            {{ timeStamp }}
             <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{islike==0?'0':'1'}}.png" @tap="likeBtnClick"/>
+                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" data-commentid="{{commentId}}" @tap="likeBtnClick"/>
                 <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
@@ -78,36 +80,34 @@
     import wepy from 'wepy'
 
     export default class CommentItem extends wepy.component {
-        props = ['content', 'time', 'likeNum'];
+        props = ['commentId', 'comment', 'timeStamp', 'likeNum', 'messageType'];
 
         onLoad () {
             console.log('enter')
         };
 
         data = {
-            islike: 0
+            islike: false
         };
 
         methods = {
-            tabClick (e) {
-                this.sliderOffset = e.currentTarget.offsetLeft
-                this.activeIndex = e.currentTarget.id
-            },
-
             likeBtnClick (e) {
-                console.log('likeClick:'+this.islike)
-                if (this.islike == 0) {
-                    console.log('like')
-                    this.islike = 1
-                    e.currentTarget.src = '../images/likeIcon0.png'
-                    this.likeNum = this.likeNum + 1
-                    // todo: 告诉后台+1
-                } else {
+                this.islike = !this.islike
+                console.log(e)
+                if (e.currentTarget.dataset.islikeon) {
                     console.log('dislike')
-                    this.islike = 0
-                    this.likeNum = this.likeNum - 1
                     // todo: 告诉后台-1
+                } else {
+                    console.log('like')
+                    // todo: 告诉后台+1
                 }
+                e.currentTarget.dataset.islikeon = !e.currentTarget.dataset.islikeon
+
+                var newE = e
+                newE.messageId = e.currentTarget.dataset.msgid
+                newE.commentId = e.currentTarget.dataset.commentid
+                console.log(newE)
+                this.$emit('likeBtnClick', newE)
             }
         }
     }

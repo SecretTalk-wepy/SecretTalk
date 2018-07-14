@@ -30,7 +30,7 @@
 </style>
 <template>
     <view class="msg-item-wrapper" @tap="tapItem">
-        <view class="user-icon">
+        <view class="user-icon" style="background-color: {{color}}">
         </view>
         <view class="msg-content">
             {{ content }}
@@ -44,7 +44,14 @@
     import wepy from 'wepy'
 
     export default class MsgItem extends wepy.component {
-        props = ['content', 'time'];
+        props = {
+            content: String,
+            time: String,
+            color: {
+                type: String,
+                default: '#ffffff'
+            }
+        };
 
         onLoad () {
             console.log('enter')
