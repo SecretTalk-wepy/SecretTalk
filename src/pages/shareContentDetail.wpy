@@ -49,8 +49,8 @@
         justify-content: space-between;
         align-content: flex-end;
         margin: 5px;
-        width: 50%; /*还要调整,最好自适应*/
-        margin-left: 45%;
+        width: 35%;
+        margin-left:60%;
     }
     .divLine{
         background: #E0E3DA;
@@ -114,7 +114,7 @@
         <!--问题-->
         <view class="weui-tab__panel">
             <view class="weui-tab__content">
-                <repeat for="{{shareConversationContent}}" item="item" key="index" index="index">
+                <repeat for="{{shareConversationContent}}" item="item" key="unique" index="index">
                     <shareContent 
                         :messageId="item.messageId"
                         :message="item.message"
@@ -127,10 +127,10 @@
 
         <!--热度和评论按钮-->
         <view class="oprationBtnWrapper">
-            <view class="commentBtn" @tap="onChangeShowState">
+            <!--<view class="commentBtn" @tap="onChangeShowState">
                 <image class="totallikeAndCommentIcon" src="../images/likeIcon1.png"/>
                 <text class="totallikenum">{{totalLikeNum}}</text>
-            </view>
+            </view>-->
             <view class="commentBtn" @tap="collectBtnClick">
                 <image class="totallikeAndCommentIcon" src="../images/collect{{isCollect?'1':'0'}}.png"/>
                 <text class="collect">收藏</text>
@@ -173,17 +173,24 @@
     import CommentItem from '../components/commentItem'
 
     export default class ShareContentDetail extends wepy.page {
+        config = {
+            'onReachBottomDistance': -1
+        }
+
         components = {
             shareContent: ShareContent,
             commentItem: CommentItem
         };
+
+        
 
         methods = {
             commentBtnAreaShowClick(e) {
                 this.showView = !this.showView // 显示评论框
                 console.log('show/unshow comment area')
                 console.log(this.messageId)
-            },
+                console.log(this)
+            }
 
             bindInputChange(e) {
                 this.commentContent = e.detail.value
@@ -225,6 +232,9 @@
             },
 
             async collectBtnClick(e) {
+                console.log('piazza detail collectBtnClick before this data:')
+                console.log(this.data)
+
                 console.log((this.isCollect ? 'dis' : '') + 'collect')
 
                 let res = await wepy.request({
@@ -237,16 +247,18 @@
                 })
                 console.log(res)
 
-                var that = this
                 if (res.data.code === '400') {
                     wx.showModal({
                         title: '提示',
                         content: '已经收藏过了:)'
                     })
                 }
-                that.setData({
+                this.setData({
                     isCollect: true // TODO：等后台完善收藏功能后根据res.data.code来判断
                 })
+
+                console.log('piazza detail collectBtnClick after this data:')
+                console.log(this.data)
             }
         }
 
@@ -276,8 +288,7 @@
             // 渲染数据
             console.log('getMsgAndComments:')
             console.log(res.data)
-            var that = this
-            that.setData({
+            this.setData({
                 commentList: res.data.respondBody.comments,
                 totalLikeNum: res.data.respondBody.likeNum,
                 isCollect: (res.data.code === '200' ? true : false),
@@ -290,12 +301,13 @@
                     }
                 ]
             })
-            console.log(this.shareConversationContent)
+            console.log('piazza getMsgAndComments after this')
+            console.log(this)
         }
 
         async onShow() {
             this.messageId = wx.getStorageSync('msgId')
-            // console.log('msg-detail-page:')
+            console.log('msg-detail-page onShow:')
             // console.log(this.messageId)
             await this.getMsgAndComments()
         }
