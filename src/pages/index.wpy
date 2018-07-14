@@ -12,13 +12,15 @@
         border-radius:25rpx;
         left:20%;
     }
+    .welcomes {
+        animation-duration: 10s;
+        animation-iteration-count: initial;
+    }
+
 </style>
 <template>
     <view class="container">
-        <image src="../images/start.jpg" mode="aspectFill"/>
-        <!--
-        <button id="app_entrance" type="primary" bindtap="enterLoginPage">秘密世界</button>
-        -->
+        <image class = "welcomes" src="../images/welcome.gif" mode="aspectFill"/>
     </view>
 </template>
 
@@ -35,8 +37,8 @@
 
         onShow () {
             setTimeout(() => {
-                this.$root.$navigate({url: './piazza'})
-            }, 200)
+                this.$root.$navigate({url: './login'})
+            }, 5000)
         }
 }
 </script>
