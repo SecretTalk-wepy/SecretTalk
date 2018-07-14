@@ -9,7 +9,6 @@
         height: 100rpx;
         border-radius: 50%;
         background-color: #99ddff;
-        opacity: 0.3;
     }
     .msg-content {
         width: 400rpx;

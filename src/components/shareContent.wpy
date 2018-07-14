@@ -27,8 +27,8 @@
         -webkit-line-clamp: 3;
     }
     .msg-time {
-        width: 120rpx;
-        font-size: 22rpx;
+        width: 100rpx;
+        font-size: 14rpx;
         color: #888888;
         word-break: break-all;
     }

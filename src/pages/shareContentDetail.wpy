@@ -93,7 +93,6 @@
         position: fixed;
         bottom: 0%;
         border-top: 1px solid #888888;
-        background-color: #f0eff5;
     }
     
     .cancelBtn {
@@ -120,7 +119,7 @@
                         :messageId="item.messageId"
                         :message="item.message"
                         :timestamp="item.timestamp"
-                        :likeNum="item.collectNum"
+                        :likeNum="item.likeNum"
                         :messageType="item.messageType" />
                 </repeat>
             </view>
@@ -154,8 +153,7 @@
                         :comment="item.comment"
                         :timeStamp="item.timeStamp"
                         :likeNum="item.likeNum"
-                        :messageType="item.messageType"
-                        :color="item.color" />
+                        :messageType="item.messageType" />
                 </repeat>
             </view>
         </view>
@@ -173,7 +171,6 @@
     import wepy from 'wepy'
     import ShareContent from '../components/shareContent'
     import CommentItem from '../components/commentItem'
-    import { avatarColor, timeResolver } from '../utils/utils.js'
 
     export default class ShareContentDetail extends wepy.page {
         config = {
@@ -189,10 +186,9 @@
 
         methods = {
             commentBtnAreaShowClick(e) {
-                this.showView = !this.showView // 显示评论框
+                //this.showView = !this.showView // 显示评论框
                 console.log('show/unshow comment area')
-                console.log(this.messageId)
-                console.log(this)
+                console.log(this.commentList)
             },
 
             bindInputChange(e) {
@@ -236,33 +232,32 @@
 
             async collectBtnClick(e) {
                 console.log('piazza detail collectBtnClick before this data:')
+                console.log(this.data)
 
                 console.log((this.isCollect ? 'dis' : '') + 'collect')
-                let that = this
-                if (that.isCollect) { // 取消收藏
-                    let res = await wepy.request({
-                        url: `${that.$parent.globalData.baseUrl}/square/cancelCollect`,
-                        method: 'POST',
-                        data: {
-                            messageId: that.messageId,
-                            userId: wx.getStorageSync('userId')
-                        }
+
+                let res = await wepy.request({
+                    url: `${this.$parent.globalData.baseUrl}/square/collect`,
+                    method: 'POST',
+                    data: {
+                        messageId: this.messageId,
+                        userId: wx.getStorageSync('userId')
+                    }
+                })
+                console.log(res)
+
+                if (res.data.code === '400') {
+                    wx.showModal({
+                        title: '提示',
+                        content: '已经收藏过了:)'
                     })
-                    that.isCollect = false
-                } else {  // 收藏
-                    let res = await wepy.request({
-                        url: `${that.$parent.globalData.baseUrl}/square/collect`,
-                        method: 'POST',
-                        data: {
-                            messageId: that.messageId,
-                            userId: wx.getStorageSync('userId')
-                        }
-                    })
-                    that.isCollect = true
                 }
-                that.$apply()
+                this.setData({
+                    isCollect: true // TODO：等后台完善收藏功能后根据res.data.code来判断
+                })
+
                 console.log('piazza detail collectBtnClick after this data:')
-                console.log(that.data)
+                console.log(this.data)
             }
         }
 
@@ -272,27 +267,14 @@
                 method: 'POST',
                 data: postBody
             })
-            if (res.data.code === '200') {
-                wepy.showToast({
-                    title: '发送成功',
-                    icon: 'success'
-                })
-            } else {
-                wepy.showToast({
-                    title: '发送失败..',
-                    icon: 'none'
-                })
-            }
             console.log('make comment btn click')
             console.log(res)
             // 发送完评论后自动刷新
-            this.showView = !this.showView
             await this.getMsgAndComments()
         }
 
         async getMsgAndComments() {
             // 获取数据
-            let self = this
             let res = await wepy.request({
                 url: `${this.$parent.globalData.baseUrl}/square/DetailById`,
                 method: 'POST',
@@ -305,31 +287,19 @@
             // 渲染数据
             console.log('getMsgAndComments:')
             console.log(res.data)
-            let commentList = res.data.respondBody.comments.map((session) => {
-                let {comment, commitId, likeNum, timeStamp, userId} = session
-                return {
-                    comment: comment,
-                    commitId: commitId,
-                    likeNum: likeNum,
-                    color: avatarColor ? avatarColor(userId || '0') : '#ddffff',
-                    timeStamp: timeResolver(timeStamp),
-                    userId: userId
-                }
+            this.setData({
+                commentList: res.data.respondBody.comments,
+                totalLikeNum: res.data.respondBody.likeNum,
+                isCollect: (res.data.code === '200' ? true : false),
+                shareConversationContent: [
+                    {
+                        messageId: res.data.respondBody.messageId,
+                        message: res.data.respondBody.message,
+                        timestamp: res.data.respondBody.timestamp,
+                        likeNum: res.data.respondBody.likeNum
+                    }
+                ]
             })
-            self.commentList = commentList
-            self.totalLikeNum = res.data.respondBody.likeNum
-            self.isCollect = (res.data.code === '200' ? true : false)
-            self.shareConversationContent =  [
-                {
-                    messageId: res.data.respondBody.messageId,
-                    message: res.data.respondBody.message,
-                    timestamp: timeResolver(res.data.respondBody.timestamp),
-                    likeNum: res.data.respondBody.likeNum,
-                    collectNum: res.data.respondBody.collectNum
-                }
-            ]
-            console.log(new Date(res.data.respondBody.timestamp).toString())
-            self.$apply()
             console.log('piazza getMsgAndComments after this')
             console.log(this)
         }
@@ -350,8 +320,59 @@
             isCollect: false,
             commentContent: '',
 
-            shareConversationContent: [],
-            commentList: []
+            shareConversationContent: [
+                // {
+                //     messageId: 1,
+                //     message: '找不到对象怎么办',
+                //     timestamp: '20180808',
+                //     likeNum: 0,
+                // }
+            ],
+
+            commentList: [
+                // {
+                //     messageId: 1,
+                //     message: '+1咯',
+                //     timestamp: '20180808',
+                //     islike: false,
+                //     likeNum: 0
+                // },
+                // {
+                //     messageId: 2,
+                //     message: '来自单身狗的忧虑',
+                //     timestamp: '20180808',
+                //     islike: true,
+                //     likeNum: 0
+                // },
+                // {
+                //     messageId: 3,
+                //     message: 'new一个',
+                //     timestamp: '20180808',
+                //     islike: true,
+                //     likeNum: 666
+                // },
+                // {
+                //     messageId: 4,
+                //     message: '我在这里',
+                //     timestamp: '20180808',
+                //     islike: false,
+                //     likeNum: 22
+                // },
+                // {
+                //     messageId: 5,
+                //     message: '我在这里',
+                //     time: '20180808',
+                //     islike: true,
+                //     likeNum: 22
+                // },
+                // {
+                //     messageId: 6,
+                //     message: '我在这里',
+                //     timestamp: '20180808',
+                //     islike: false,
+                //     likeNum: 22
+                // }
+            ]
         }
     }
 </script>
