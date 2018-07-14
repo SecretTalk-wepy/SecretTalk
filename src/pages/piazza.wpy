@@ -118,7 +118,10 @@
             WorkplaceContentList: [],
             emotionContentList: [],
             marriageContentList: [],
-            otherContentList: []
+            otherContentList: [],
+
+            loadPage: 0,
+            loadSize: 5
         }
 
         methods = {
@@ -129,8 +132,8 @@
                 let postBody = {}
                 // postBody.userId = wx.getStorageSync('userId')
                 postBody.type = parseInt(this.activeIndex)
-                postBody.page = 0
-                postBody.size = 5
+                postBody.page = this.loadPage
+                postBody.size = this.loadSize
                 console.log(postBody)
                 await this.sendData(postBody);
             }
@@ -147,7 +150,7 @@
 
             if (postBody.type === 0) {
                 that.setData({
-                    healthContentList:res.data.respondBody
+                    healthContentList: res.data.respondBody
                 });
                 // await wepy.setStorage({
                 //     key: 'defaultPiazzaHealthyData',
@@ -155,28 +158,33 @@
                 // })
             } else if (postBody.type === 1) {
                 that.setData({
-                    WorkplaceContentList:res.data.respondBody
+                    WorkplaceContentList: res.data.respondBody
                 });
             } else if (postBody.type === 2) {
                 that.setData({
-                    emotionContentList:res.data.respondBody
+                    emotionContentList: res.data.respondBody
                 });
             } else if (postBody.type === 3) {
                 that.setData({
-                    marriageContentList:res.data.respondBody
+                    marriageContentList: res.data.respondBody
                 });
             } else if (postBody.type === 4) {
                 that.setData({
-                    otherContentList:res.data.respondBody
+                    otherContentList: res.data.respondBody
                 });
             }
         }
 
         events = {
-            'toShareDetail': (target) => {
+            async toShareDetail(target) {
                 console.log('toShareDetail:')
-                console.log(target)
-                this.$root.$navigate({url: './shareContentDetail'})
+                console.log(target.messageId)
+                var msgid = target.messageId
+                await wepy.setStorage({
+                    key: 'msgId',
+                    data: msgid
+                })
+                this.$root.$redirect({url: './shareContentDetail'})
             }
         }
 
@@ -190,12 +198,21 @@
         async onShow () {
             console.log('piazza onshow')
             let postBody = {}
-            // postBody.userId = wx.getStorageSync('userId')
             postBody.type = parseInt(this.activeIndex)
-            postBody.page = 0
-            postBody.size = 5
+            postBody.page = this.loadPage
+            postBody.size = this.loadSize
             console.log(postBody)
             await this.sendData(postBody);
+
+            // this.healthContentList = [
+            //     {
+            //         messageId: "666",
+            //         timestamp: 20180909,
+            //         likeNum: 22,
+            //         messageType: 0,
+            //         message: "testtes"
+            //     }
+            // ]
         }
     }
 </script>
