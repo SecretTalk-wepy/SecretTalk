@@ -55,10 +55,10 @@
                         </view>
                         <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px); width: 96px"></view>
                     </view>
-                    <view class="weui-tab__panel">
+                    <view class="weui-tab__panel" @tap="tapMsg">
                         <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                             <repeat for="{{sentList}}" key="index" index="index" item="item">
-                                <msgItem 
+                                <msgItem
                                     :content="item.content"
                                     :time="item.time"
                                     :color="item.color"
@@ -67,7 +67,7 @@
                         </view>
                         <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                             <repeat for="{{recvList}}" key="index" index="index" item="item">
-                                <msgItem 
+                                <msgItem
                                     :content="item.content"
                                     :time="item.time" 
                                     :color="item.color"
@@ -84,7 +84,7 @@
 <script>
     import wepy from 'wepy'
     import MsgItem from '../components/msgItem'
-    import avatarColor from '../utils/avatarColor'
+    import { avatarColor } from '../utils/avatarColor.js'
 
     const sliderWidth = 96
     let userId
@@ -113,17 +113,22 @@
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
                 if (e.currentTarget.id === '0') {
-                    this.setData({
-                        sentList: await this.getSentList()
-                    })
+                    this.sentList = await this.getSentList()
+                    this.$apply()
                 } else {
-                    this.setData({
-                        recvList: await this.getRecvList()
-                    })
+                    this.recvList = await this.getRecvList()
+                    this.$apply()
                 }
             },
             editNewSecret() {
                 this.$root.$navigate({url: './edit_secret'})
+            },
+            tapMsg(e) {
+                if (e.target.dataset.bottle) {
+                    this.$root.$navigate('./secret_detail', {
+                        bottleId: e.target.dataset.bottle
+                    })
+                }
             }
         }
 
@@ -144,10 +149,9 @@
         }
 
         async onShow() {
-            this.setData({
-                sentList: await this.getSentList(),
-                recvList: await this.getRecvList()
-            })
+            this.sentList = await this.getSentList()
+            this.recvList = await this.getRecvList()
+            this.$apply()
         }
 
         async getSentList () {
@@ -162,7 +166,7 @@
                 return {
                     bottleId: key,
                     content: content,
-                    color: avatarColor ? avatarColor(strangerId || '0') : '#ddffff',
+                    color: avatarColor != null ? avatarColor(strangerId || '0') : '#ddffff',
                     time: new Date(timestamp).toString().substr(10, 12)
                 }
             })
@@ -181,7 +185,7 @@
                 return {
                     bottleId: key,
                     content: content,
-                    color: avatarColor ? avatarColor(strangerId || '0') : '#ddffff',
+                    color: avatarColor != null ? avatarColor(strangerId || '0') : '#ddffff',
                     time: new Date(timestamp).toString().substr(10, 12)
                 }
             })

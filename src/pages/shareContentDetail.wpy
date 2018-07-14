@@ -186,11 +186,10 @@
 
         methods = {
             commentBtnAreaShowClick(e) {
-                this.showView = !this.showView // 显示评论框
+                //this.showView = !this.showView // 显示评论框
                 console.log('show/unshow comment area')
-                console.log(this.messageId)
-                console.log(this)
-            }
+                console.log(this.commentList)
+            },
 
             bindInputChange(e) {
                 this.commentContent = e.detail.value
