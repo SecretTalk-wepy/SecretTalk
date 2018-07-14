@@ -1,4 +1,4 @@
-export default function getAvatarColor(userId) {
+export default function avatarColor(userId) {
     let hash = userId.split('').reduce(function(pre, cur, index) {
         let tmp = pre+cur.charCodeAt()*index;
         tmp %= 256*256*256;

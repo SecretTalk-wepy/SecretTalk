@@ -29,7 +29,7 @@
     }
 </style>
 <template>
-    <view class="msg-item-wrapper" @tap="tapItem">
+    <view class="msg-item-wrapper" @tap="tapItem({{bottleId}})">
         <view class="user-icon" style="background-color: {{color}}">
         </view>
         <view class="msg-content">
@@ -59,8 +59,8 @@
         }
 
         methods = {
-            tapItem (e) {
-                this.$emit('toDetail', this.bottleId)
+            tapItem (bottleId) {
+                this.$emit('toDetail', bottleId)
             }
         }
     }

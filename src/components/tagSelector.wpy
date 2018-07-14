@@ -50,6 +50,7 @@
         methods = {
             selectTag(index) {
                 this.tagsData.target = index
+                this.$apply()
             }
         }
     }
