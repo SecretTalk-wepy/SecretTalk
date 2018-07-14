@@ -177,7 +177,9 @@
 
     export default class ShareContentDetail extends wepy.page {
         config = {
-            'onReachBottomDistance': -1
+            'onReachBottomDistance': -1,
+            'enablePullDownRefresh': true,
+            'backgroundTextStyle': 'dark'
         }
 
         components = {
@@ -338,6 +340,15 @@
             this.messageId = wx.getStorageSync('msgId')
             console.log('msg-detail-page onShow:')
             // console.log(this.messageId)
+            await this.getMsgAndComments()
+        }
+
+        async onPullDownRefresh() {
+            console.log('detal onPullDownRefresh')
+            setTimeout(function () {
+                // 不加这个方法真机下拉会一直处于刷新状态，无法复位
+                wepy.stopPullDownRefresh()
+            }, 5000)
             await this.getMsgAndComments()
         }
 
