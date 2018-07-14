@@ -1,5 +1,5 @@
-<style type="less">
-    .msg-item-wrapper {
+<style type="less" scoped>
+    .comment-item-wrapper {
         display: flex;
         justify-content: space-between;
         margin: 15px;
@@ -15,7 +15,7 @@
         height: 100rpx;
         align-content: flex-start;
     }
-    .msg-content {
+    .comment-content {
         width: 400rpx;
         font-size: 11pt;
         color: #333333;
@@ -26,13 +26,12 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
     }
-    .msg-time {
+    .comment-time {
         width: 120rpx;
         font-size: 22rpx;
         color: #888888;
         word-break: break-all;
     }
-
     .likenum {
         display: inline;
         font-size: 25rpx;
@@ -58,18 +57,20 @@
         display: flex;
         align-content: flex-start;
     }
+
 </style>
 
 <template>
-    <view class="msg-item-wrapper" @tap="tapItem"  data-msgid="{{messageId}}">
-        <image class="profilePhoto" src="../images/temp_head.png">
-        <view class="msg-content">
-            {{ message }}
+    <view class="comment-item-wrapper">
+        <!-- <image class="profilePhoto" src="../images/commentHead.png"> -->
+        <view class="user-icon" style="background-color: {{color}}"/>
+        <view class="comment-content">
+            {{ comment }}
         </view>
-        <view class="msg-time">
-            {{ timestamp }}
+        <view class="comment-time">
+            {{ timeStamp }}
             <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" @tap="likeBtnClick"/>
+                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" data-commentid="{{commentId}}" @tap="likeBtnClick"/>
                 <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
@@ -79,26 +80,35 @@
 <script>
     import wepy from 'wepy'
 
-    export default class shareContent extends wepy.component {
-        props = ['messageId', 'message','timestamp','likeNum', 'messageType'];
-
-        data = {
-            // messageId:'666'
-        }
+    export default class CommentItem extends wepy.component {
+        props = ['commentId', 'comment', 'timeStamp', 'likeNum', 'messageType', 'color'];
 
         onLoad () {
-            // console.log('enter')
+            console.log('enter')
+        };
+
+        data = {
+            islike: false
         };
 
         methods = {
-            tapItem (e) {
-                console.log('msgID:')
-                console.log(e.currentTarget.dataset.msgid)
-                
-                var newE = e
-                newE.messageId = e.currentTarget.dataset.msgid
-                // newE.messageId = 
-                this.$emit('toShareDetail', newE)
+            likeBtnClick (e) {
+                this.islike = !this.islike
+                console.log(e)
+                if (e.currentTarget.dataset.islikeon) {
+                    console.log('dislike')
+                    // todo: 告诉后台-1
+                } else {
+                    console.log('like')
+                    // todo: 告诉后台+1
+                }
+                e.currentTarget.dataset.islikeon = !e.currentTarget.dataset.islikeon
+
+                // var newE = e
+                // newE.messageId = e.currentTarget.dataset.msgid
+                // newE.commentId = e.currentTarget.dataset.commentid
+                // console.log(newE)
+                // this.$emit('likeBtnClick', newE)
             }
         }
     }

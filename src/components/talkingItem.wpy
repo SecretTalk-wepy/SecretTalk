@@ -14,18 +14,23 @@
         width: 400rpx;
         font-size: 11pt;
         color: #333333;
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
         word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
     }
     .msg-time {
         width: 100rpx;
-        font-size: 11pt;
+        font-size: 9pt;
         color: #888888;
         word-break: break-all;
     }
 </style>
 <template>
-    <view class="msg-item-wrapper" @tap="tapItem">
-        <view class="user-icon">
+    <view class="msg-item-wrapper">
+        <view class="user-icon" style="background-color: {{color}}">
         </view>
         <view class="msg-content">
             {{ content }}
@@ -39,16 +44,19 @@
     import wepy from 'wepy'
 
     export default class MsgItem extends wepy.component {
-        props = ['content', 'time'];
+        props = {
+            content: String,
+            time: String,
+            color: {
+                type: String,
+                default: '#ffffff'
+            }
+        }
 
         onLoad () {
             console.log('enter')
-        };
-
-        methods = {
-            tapItem (e) {
-                this.$emit('toDetail', e)
-            }
         }
+
+        methods = {}
     }
 </script>

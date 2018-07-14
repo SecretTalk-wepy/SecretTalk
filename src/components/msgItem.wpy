@@ -23,19 +23,19 @@
     }
     .msg-time {
         width: 100rpx;
-        font-size: 11pt;
+        font-size: 9pt;
         color: #888888;
         word-break: break-all;
     }
 </style>
 <template>
-    <view class="msg-item-wrapper" @tap="tapItem">
-        <view class="user-icon" style="background-color: {{color}}">
+    <view class="msg-item-wrapper">
+        <view class="user-icon" data-bottle="{{bottleId}}" style="background-color: {{color}}">
         </view>
-        <view class="msg-content">
+        <view class="msg-content" data-bottle="{{bottleId}}">
             {{ content }}
         </view>
-        <view class="msg-time">
+        <view class="msg-time" data-bottle="{{bottleId}}">
             {{ time }}
         </view>
     </view>
@@ -50,17 +50,15 @@
             color: {
                 type: String,
                 default: '#ffffff'
-            }
-        };
+            },
+            bottleId: String
+        }
 
         onLoad () {
             console.log('enter')
-        };
+        }
 
         methods = {
-            tapItem (e) {
-                this.$emit('toDetail', e)
-            }
         }
     }
 </script>

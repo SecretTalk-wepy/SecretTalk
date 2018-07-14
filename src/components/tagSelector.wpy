@@ -5,7 +5,7 @@
         justify-content: flex-start;
     }
     .tag-item {
-        display: block;
+        text-align: center;
         box-sizing: border-box;
         font-size: 11pt;
         border-radius: 40rpx;
@@ -50,6 +50,7 @@
         methods = {
             selectTag(index) {
                 this.tagsData.target = index
+                this.$apply()
             }
         }
     }
