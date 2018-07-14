@@ -1,4 +1,4 @@
-const getAvatarColor = function(userId) {
+export default function getAvatarColor(userId) {
     let hash = userId.split('').reduce(function(pre, cur, index) {
         let tmp = pre+cur.charCodeAt()*index;
         tmp %= 256*256*256;
@@ -6,5 +6,3 @@ const getAvatarColor = function(userId) {
     }, 1)
     return '#'+hash.toString(16).padEnd(6, 'f');
 }
-
-export { getAvatarColor };

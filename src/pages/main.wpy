@@ -81,7 +81,6 @@
 
 <script>
     import wepy from 'wepy'
-    import {getAvatarColor} from '../utils/avatarColor'
     import MsgItem from '../components/msgItem'
 
     const sliderWidth = 96
@@ -103,17 +102,14 @@
             recvList: [
                 {
                     id: 1,
-                    color: getAvatarColor('123234'),
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }, {
                     id: 2,
-                    color: getAvatarColor('oM5tc5Wpvzn5adOMFBQXmgq7qR-U'),
                     content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
                     time: '20184737'
                 }, {
                     id: 3,
-                    color: getAvatarColor('oM5tc5Wpvzn5adOMF'),
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }
@@ -121,27 +117,22 @@
             sentList: [
                 {
                     id: 1,
-                    color: getAvatarColor('450601552'),
                     content: 'testsets234234123123tstest',
                     time: '20180808'
                 }, {
                     id: 2,
-                    color: getAvatarColor('oM5tc5Wpvzn5adOMFBQXmgq7qR-U'),
                     content: 'sehto234534uhgs4234jif as3423dfoh d23454hgh rtsfd ',
                     time: '20184737'
                 }, {
                     id: 3,
-                    color: getAvatarColor('4506021552'),
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }, {
                     id: 4,
-                    color: getAvatarColor('450601552'),
                     content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
                     time: '20184737'
                 }, {
                     id: 5,
-                    color: getAvatarColor('453601552'),
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }, {
@@ -170,6 +161,7 @@
         }
 
         onLoad () {
+            console.log('load')
             let res = wx.getSystemInfoSync()
             this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2
             this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
