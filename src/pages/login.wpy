@@ -1,19 +1,27 @@
 <style lang="less">
-    #entrance {
-        width: 175rpx;
-        height: 175rpx;
-        position: absolute;
-        bottom:20%;
+    page {
+        height: 100%;
+        width: 100%;
+    }
+    .containers,image {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+    }
+    .loginButton {
+        height: 200rpx;
+        width:200rpx;
+        position:fixed;
+        bottom:30%;
         left:37.5%;
-        border:4rpx solid;
-        border-radius: 50%;
-        text-align: center;
-        background-color: #FF82AB;
     }
 </style>
 <template>
-    <view class="container">
-        <button id="entrance" @tap="enterLoginPage">登录</button>
+    <view class="containers">
+        <image src="../images/start.jpg" mode="aspectFill"/>
+        <button @tap="enterLoginPage">
+            <image src="../images/login.png" z-index="-1" class="loginButton"/>
+        </button>
     </view>
 
 </template>
