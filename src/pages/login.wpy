@@ -31,8 +31,8 @@
              * @desc enter the login in page
              */
             enterLoginPage: async function () {
-                //await this.login()
-                this.$root.$switch({url: './main'})
+                await this.login()
+                this.$root.$switch({url: './piazza'})
             }
         }
 
