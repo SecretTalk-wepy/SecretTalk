@@ -61,7 +61,8 @@
                                 <msgItem 
                                     :content="item.content"
                                     :time="item.time"
-                                    :color="item.color" />
+                                    :color="item.color"
+                                    :bottleId="item.bottleId" />
                             </repeat>
                         </view>
                         <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
@@ -69,7 +70,8 @@
                                 <msgItem 
                                     :content="item.content"
                                     :time="item.time" 
-                                    :color="item.color" />
+                                    :color="item.color"
+                                    :bottleId="item.bottleId" />
                             </repeat>
                         </view>
                     </view>
@@ -101,43 +103,43 @@
             sliderLeft: 0,
             recvList: [
                 {
-                    id: 1,
+                    bottleId: 1,
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }, {
-                    id: 2,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
+                    bottleId: 2,
+                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sbottleIdf we sfd ',
                     time: '20184737'
                 }, {
-                    id: 3,
+                    bottleId: 3,
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }
             ],
             sentList: [
                 {
-                    id: 1,
+                    bottleId: 1,
                     content: 'testsets234234123123tstest',
                     time: '20180808'
                 }, {
-                    id: 2,
+                    bottleId: 2,
                     content: 'sehto234534uhgs4234jif as3423dfoh d23454hgh rtsfd ',
                     time: '20184737'
                 }, {
-                    id: 3,
+                    bottleId: 3,
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }, {
-                    id: 4,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
+                    bottleId: 4,
+                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sbottleIdf we sfd ',
                     time: '20184737'
                 }, {
-                    id: 5,
+                    bottleId: 5,
                     content: 'testsetsetsettestsetstest',
                     time: '20180808'
                 }, {
-                    id: 6,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
+                    bottleId: 6,
+                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sbottleIdf we sfd ',
                     time: '20184737'
                 }
             ]

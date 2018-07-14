@@ -50,16 +50,18 @@
             color: {
                 type: String,
                 default: '#ffffff'
-            }
-        };
+            },
+            bottleId: String
+        }
 
         onLoad () {
             console.log('enter')
-        };
+        }
 
         methods = {
             tapItem (e) {
-                this.$emit('toDetail', e)
+                console.log(this.time = '1234')
+                this.$emit('toDetail', this.bottleId)
             }
         }
     }
