@@ -1,0 +1,71 @@
+<style lang="less">
+    page {
+        height: 100%;
+        width: 100%;
+    }
+    .containers,image {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+    }
+    .loginButton {
+        height: 200rpx;
+        width:200rpx;
+        position:fixed;
+        bottom:30%;
+        left:37.5%;
+    }
+</style>
+<template>
+    <view class="containers">
+        <image src="../images/start.jpg" mode="aspectFill"/>
+        <button @tap="enterLoginPage" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
+            <image src="../images/login.png" z-index="-1" class="loginButton"/>
+        </button>
+    </view>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class Login extends wepy.page {
+        config = {
+            navigationBarTitleText: '秘密说'
+        }
+
+        methods = {
+            /**
+             * @method enterLoginPage
+             * @desc enter the login in page
+             */
+            enterLoginPage: async function () {
+                await this.login()
+                this.$root.$switch({url: './piazza'})
+            },
+            bindGetUserInfo(res) {
+                console.log(res)
+            }
+        }
+
+        async login() {
+            /* 获取code */
+            let loginRes = await wepy.login()
+            /* 服务端登录 */
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/user/wxlogin`,
+                method: 'POST',
+                header: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                data: {
+                    code: loginRes.code
+                }
+            })
+            console.log('login res', res)
+            await wepy.setStorage({
+                key: 'userId',
+                data: res.data.respondBody.userId
+            })
+        }
+    }
+</script>

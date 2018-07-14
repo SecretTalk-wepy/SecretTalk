@@ -1,0 +1,56 @@
+<style scoped type="less">
+    .tags-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+    }
+    .tag-item {
+        display: block;
+        box-sizing: border-box;
+        font-size: 11pt;
+        border-radius: 40rpx;
+        padding: 0 24rpx;
+        margin: 8rpx 10rpx;
+        min-width: 100rpx;
+        height: 60rpx;
+        line-height: 60rpx;
+    } 
+    .tag-item__on {
+        border: transparent 1px solid;
+        background-color: #800080;
+        color: #ffffff;
+    }
+    .tag-item__off {
+        border: #800080 1px solid;
+        color: #800080;
+    }
+</style>
+<template>
+    <view class="tags-wrapper">
+        <repeat for="{{tagsData.tags}}" key="index" item="item">
+            <button 
+                class="tag-item {{index === tagsData.target ? 'tag-item__on' : 'tag-item__off'}}"
+                @tap="selectTag({{index}})"
+            >
+                {{item}}
+            </button>
+        </repeat>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class TagSelector extends wepy.component {
+        props = {
+            tagsData: {
+                type: Object,
+                twoWay: true
+            }
+        }
+        methods = {
+            selectTag(index) {
+                this.tagsData.target = index
+            }
+        }
+    }
+</script>
