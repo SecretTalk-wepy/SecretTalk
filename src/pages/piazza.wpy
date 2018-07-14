@@ -208,7 +208,6 @@
                 size: this.loadSize
             }
             console.log('piazza getSearchSecrete postBody:')
-            console.log(postBody)
             let res = await wepy.request({
                 url: `${this.$parent.globalData.baseUrl}/square/index`,
                 method: 'POST',
@@ -304,7 +303,7 @@
             setTimeout(function () {
                 // 不加这个方法真机下拉会一直处于刷新状态，无法复位
                 wepy.stopPullDownRefresh()
-            }, 5000)
+            }, 3000)
 
             let that = this
             that.loadPage = {
