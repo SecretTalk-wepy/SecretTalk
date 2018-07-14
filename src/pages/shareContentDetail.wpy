@@ -149,10 +149,11 @@
             <view class="weui-tab__content">
                 <repeat for="{{commentList}}" item="item" key="index" index="index">
                     <commentItem 
-                        :content="item.content"
-                        :time="item.time"
-                        :islike="item.islike"
-                        :likeNum="item.likeNum"/>
+                        :commentId="item.commentId"
+                        :comment="item.comment"
+                        :timeStamp="item.timeStamp"
+                        :likeNum="item.likeNum"
+                        :messageType="item.messageType" />
                 </repeat>
             </view>
         </view>
@@ -181,14 +182,11 @@
             commentBtnAreaShowClick(e) {
                 this.showView = !this.showView // 显示评论框
                 console.log('show/unshow comment area')
+                console.log(this.messageId)
             },
 
             bindInputChange(e) {
                 this.commentContent = e.detail.value
-            },
-
-            async tapSendSecret() {
-                
             },
 
             async sendCommentBtnClick (e) {
@@ -205,15 +203,19 @@
                             }
                         }
                     })
+                } else {
+                    let postBody = {}
+                    postBody.userId = wx.getStorageSync('userId')
+                    postBody.squareMessageId = this.messageId
+                    postBody.comment = this.commentContent
+                    console.log(postBody)
+                    await this.sendData(postBody);
+
+                    var that = this
+                    that.setData({
+                        showView: false
+                    })
                 }
-                // 发表评论
-                // let postBody = {}
-                // this.queryItems.forEach(item => {
-                //   postBody[item.name] = item.target  
-                // })
-                // postBody.userId = wx.getStorageSync('userId')
-                // postBody.content = this.secretContent
-                // await this.sendData(postBody);
             },
 
             bindTextAreaBlur (e) {
@@ -222,81 +224,143 @@
                 this.showView = !this.showView
             },
 
-            collectBtnClick(e) {
-                this.isCollect = !this.isCollect // 显示已收藏
+            async collectBtnClick(e) {
                 console.log((this.isCollect ? 'dis' : '') + 'collect')
-                // todo:: 收藏
+
+                let res = await wepy.request({
+                    url: `${this.$parent.globalData.baseUrl}/square/collect`,
+                    method: 'POST',
+                    data: {
+                        messageId: this.messageId,
+                        userId: wx.getStorageSync('userId')
+                    }
+                })
+                console.log(res)
+
+                var that = this
+                if (res.data.code === '400') {
+                    wx.showModal({
+                        title: '提示',
+                        content: '已经收藏过了:)'
+                    })
+                }
+                that.setData({
+                    isCollect: true // TODO：等后台完善收藏功能后根据res.data.code来判断
+                })
             }
         }
 
         async sendData(postBody) {
             let res = await wepy.request({
-                url: `${this.$parent.globalData.baseUrl}/secret/sendSecret`,
+                url: `${this.$parent.globalData.baseUrl}/square/MakeComment`,
                 method: 'POST',
                 data: postBody
             })
+            console.log('make comment btn click')
             console.log(res)
+            // 发送完评论后自动刷新
+            await this.getMsgAndComments()
+        }
+
+        async getMsgAndComments() {
+            // 获取数据
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/square/DetailById`,
+                method: 'POST',
+                data: { 
+                    messageId: this.messageId,
+                    userId: wx.getStorageSync('userId')
+                }
+            })
+            
+            // 渲染数据
+            console.log('getMsgAndComments:')
+            console.log(res.data)
+            var that = this
+            that.setData({
+                commentList: res.data.respondBody.comments,
+                totalLikeNum: res.data.respondBody.likeNum,
+                isCollect: (res.data.code === '200' ? true : false),
+                shareConversationContent: [
+                    {
+                        messageId: res.data.respondBody.messageId,
+                        message: res.data.respondBody.message,
+                        timestamp: res.data.respondBody.timestamp,
+                        likeNum: res.data.respondBody.likeNum
+                    }
+                ]
+            })
+            console.log(this.shareConversationContent)
+        }
+
+        async onShow() {
+            this.messageId = wx.getStorageSync('msgId')
+            // console.log('msg-detail-page:')
+            // console.log(this.messageId)
+            await this.getMsgAndComments()
         }
 
         data = {
-            totalLikeNum: 99,
+            messageId: "",
+
+            totalLikeNum: 0,
             isCommentEditing: 0,
             showView: false,
             isCollect: false,
             commentContent: '',
 
             shareConversationContent: [
-                {
-                    messageId: 1,
-                    message: '找不到对象怎么办',
-                    timestamp: '20180808',
-                    likeNum: 0,
-                }
+                // {
+                //     messageId: 1,
+                //     message: '找不到对象怎么办',
+                //     timestamp: '20180808',
+                //     likeNum: 0,
+                // }
             ],
 
             commentList: [
-                {
-                    messageId: 1,
-                    message: '+1咯',
-                    timestamp: '20180808',
-                    islike: false,
-                    likeNum: 0
-                },
-                {
-                    messageId: 2,
-                    message: '来自单身狗的忧虑',
-                    timestamp: '20180808',
-                    islike: true,
-                    likeNum: 0
-                },
-                {
-                    messageId: 3,
-                    message: 'new一个',
-                    timestamp: '20180808',
-                    islike: true,
-                    likeNum: 666
-                },
-                {
-                    messageId: 4,
-                    message: '我在这里',
-                    timestamp: '20180808',
-                    islike: false,
-                    likeNum: 22
-                },
-                {
-                    messageId: 5,
-                    message: '我在这里',
-                    time: '20180808',
-                    islike: true,
-                    likeNum: 22
-                },
-                {
-                    messageId: 6,
-                    content: '我在这里',
-                    timestamp: '20180808',
-                    islike: false,
-                    likeNum: 22
-                }
+                // {
+                //     messageId: 1,
+                //     message: '+1咯',
+                //     timestamp: '20180808',
+                //     islike: false,
+                //     likeNum: 0
+                // },
+                // {
+                //     messageId: 2,
+                //     message: '来自单身狗的忧虑',
+                //     timestamp: '20180808',
+                //     islike: true,
+                //     likeNum: 0
+                // },
+                // {
+                //     messageId: 3,
+                //     message: 'new一个',
+                //     timestamp: '20180808',
+                //     islike: true,
+                //     likeNum: 666
+                // },
+                // {
+                //     messageId: 4,
+                //     message: '我在这里',
+                //     timestamp: '20180808',
+                //     islike: false,
+                //     likeNum: 22
+                // },
+                // {
+                //     messageId: 5,
+                //     message: '我在这里',
+                //     time: '20180808',
+                //     islike: true,
+                //     likeNum: 22
+                // },
+                // {
+                //     messageId: 6,
+                //     message: '我在这里',
+                //     timestamp: '20180808',
+                //     islike: false,
+                //     likeNum: 22
+                // }
             ]
         }
     }
