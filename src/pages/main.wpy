@@ -86,6 +86,7 @@
     import MsgItem from '../components/msgItem'
 
     const sliderWidth = 96
+    let userId;
 
     export default class Main extends wepy.page {
         config = {
@@ -101,54 +102,23 @@
             activeIndex: 0,
             sliderOffset: 0,
             sliderLeft: 0,
-            recvList: [
-                {
-                    bottleId: 1,
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }, {
-                    bottleId: 2,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sbottleIdf we sfd ',
-                    time: '20184737'
-                }, {
-                    bottleId: 3,
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }
-            ],
-            sentList: [
-                {
-                    bottleId: 1,
-                    content: 'testsets234234123123tstest',
-                    time: '20180808'
-                }, {
-                    bottleId: 2,
-                    content: 'sehto234534uhgs4234jif as3423dfoh d23454hgh rtsfd ',
-                    time: '20184737'
-                }, {
-                    bottleId: 3,
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }, {
-                    bottleId: 4,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sbottleIdf we sfd ',
-                    time: '20184737'
-                }, {
-                    bottleId: 5,
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }, {
-                    bottleId: 6,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sbottleIdf we sfd ',
-                    time: '20184737'
-                }
-            ]
+            recvList: [],
+            sentList: []
         }
 
         methods = {
-            tabClick (e) {
+            async tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
+                if (e.currentTarget.id === '0') {
+                    this.setData({
+                        sentList: await this.getSentList()
+                    })
+                } else {
+                    this.setData({
+                        recvList: await this.getRecvList()
+                    })
+                }
             },
             editNewSecret() {
                 this.$root.$navigate({url: './edit_secret'})
@@ -162,11 +132,55 @@
             }
         }
 
-        onLoad () {
+        async onLoad () {
             console.log('load')
             let res = wx.getSystemInfoSync()
             this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2
             this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
+            userId = wx.getStorageSync('userId')
+            this.setData({
+                sentList: await this.getSentList()
+            })
+        }
+
+        async getSentList () {
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/secret/getMySend/${userId}`,
+                method: 'GET',
+            })
+            let keys = Object.keys(res.data.respondBody);
+            let sentList = keys.map((key) => {
+                let {content, receiverId, sendId, timestamp} = res.data.respondBody[key][0];
+                console.log(res.data.respondBody[key]);
+                return {
+                    bottleId: key,
+                    content: content,
+                    userId: receiverId === userId ? sendId : receiverId,
+                    time: new Date(timestamp).toString().substr(10, 12)
+                }
+            })
+            console.log(res);
+            return sentList;
+        }
+
+        async getRecvList () {
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/secret/getMyReceive/${userId}`,
+                method: 'GET',
+            })
+            let keys = Object.keys(res.data.respondBody);
+            let sentList = keys.map((key) => {
+                let {content, receiverId, sendId, timestamp} = res.data.respondBody[key][0];
+                console.log(res.data.respondBody[key]);
+                return {
+                    bottleId: key,
+                    content: content,
+                    userId: receiverId === userId ? sendId : receiverId,
+                    time: new Date(timestamp).toString().substr(10, 12)
+                }
+            })
+            console.log(res);
+            return sentList;
         }
     }
 

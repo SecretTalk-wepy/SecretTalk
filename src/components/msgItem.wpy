@@ -60,7 +60,6 @@
 
         methods = {
             tapItem (e) {
-                console.log(this.time = '1234')
                 this.$emit('toDetail', this.bottleId)
             }
         }
