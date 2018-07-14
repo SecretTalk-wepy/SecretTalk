@@ -161,7 +161,7 @@
         </view>
 
         <!--编辑评论-->
-        <view class="commentEditView{{showView?'Show':'Hide'}}" bindblur="bindTextAreaBlur">
+        <view class="commentEditView{{showView?'Show':'Hide'}}">
             <textarea  class="commentEditArea" bindinput="bindInputChange" value="{{commentContent}}"/>
             <view class="cancelBtn" @tap="commentBtnAreaShowClick">取消</view>
             <view class="submitBtn" @tap="sendCommentBtnClick">发表</view>
@@ -192,7 +192,6 @@
         methods = {
             commentBtnAreaShowClick(e) {
                 this.showView = !this.showView // 显示评论框
-                console.log('show/unshow comment area')
             },
 
             bindInputChange(e) {
@@ -200,15 +199,13 @@
             },
 
             async sendCommentBtnClick (e) {
-                console.log('sending comment')
                 if (this.commentContent === '') {
-                    console.log('不能发送空白评论:)')
                     wx.showModal({
                         title: '提示',
                         content: '不能发送空白评论:)',
                         success: function(res) {
                             if (res.confirm) {
-                                console.log('用户点击确定')
+                                // ...
                             }
                         }
                     })
@@ -224,16 +221,8 @@
                     that.$apply()
                 }
             },
-
-            bindTextAreaBlur (e) {
-                console.log('lose focus')
-                this.showView = !this.showView
-            },
-
+            
             async collectBtnClick(e) {
-                console.log('piazza detail collectBtnClick before this data:')
-
-                console.log((this.isCollect ? 'dis' : '') + 'collect')
                 let that = this
                 if (that.isCollect) { // 取消收藏
                     let res = await wepy.request({
@@ -257,7 +246,6 @@
                     that.isCollect = true
                 }
                 that.$apply()
-                console.log('piazza detail collectBtnClick after this data:')
             }
         }
 
@@ -278,7 +266,6 @@
                     icon: 'none'
                 })
             }
-            console.log('make comment btn click')
             // 发送完评论后自动刷新
             this.showView = !this.showView
             await this.getMsgAndComments()
@@ -297,7 +284,6 @@
             })
             
             // 渲染数据
-            console.log('getMsgAndComments:')
             let commentList = res.data.respondBody.comments.map((session) => {
                 let {comment, commitId, likeNum, timeStamp, userId} = session
                 return {
@@ -322,18 +308,14 @@
                 }
             ]
             self.$apply()
-            console.log('piazza getMsgAndComments after this')
         }
 
         async onShow() {
             this.messageId = wx.getStorageSync('msgId')
-            console.log('msg-detail-page onShow:')
-            // console.log(this.messageId)
             await this.getMsgAndComments()
         }
 
         async onPullDownRefresh() {
-            console.log('detal onPullDownRefresh')
             setTimeout(function () {
                 // 不加这个方法真机下拉会一直处于刷新状态，无法复位
                 wepy.stopPullDownRefresh()

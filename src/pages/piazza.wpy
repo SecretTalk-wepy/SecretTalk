@@ -174,8 +174,6 @@
 
         methods = {
             async tabClick (e) {
-                console.log('piazza tabClick')
-                
                 let that = this
                 that.sliderOffset = e.currentTarget.offsetLeft
                 that.activeIndex = e.currentTarget.id
@@ -186,8 +184,6 @@
         }
 
         async fetchData(postBody) {
-            console.log('piazza fetchData')
-            
             let that = this
             let msgType= parseInt(this.activeIndex)
             that.isFromSearch =  false  // 触发到上拉事件，把isFromSearch设为为false
@@ -196,7 +192,6 @@
             
             //访问网络
             await that.getSearchSecrete(searchPageNum, callbackcount)
-            
             that.$apply()
         }
 
@@ -215,9 +210,6 @@
             })
             
             if(res.statusCode == 200){
-                console.log('piazza getSearchSecrete request ok')
-                // callback(res.data.respondBody);
-
                 let that = this
                 // 处理dataList的时间戳
                 let dataList = res.data.respondBody.map((session) => {
@@ -288,18 +280,14 @@
         }
 
         async onShow () {
-            console.log('piazza onshow')
             await this.fetchData();
         }
 
         async onReachBottom() {
-            console.log('onReachBottom')
-
             await this.fetchData();
         }
 
         async onPullDownRefresh() {
-            console.log('onPullDownRefresh')
             setTimeout(function () {
                 // 不加这个方法真机下拉会一直处于刷新状态，无法复位
                 wepy.stopPullDownRefresh()
@@ -326,8 +314,6 @@
         
         events = {
             async toShareDetail(target) {
-                console.log('toShareDetail:')
-                console.log(target.messageId)
                 var msgid = target.messageId
                 await wepy.setStorage({
                     key: 'msgId',
