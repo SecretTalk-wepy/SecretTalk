@@ -10,6 +10,7 @@
         height: 100%;
         font-family: '\5FAE\8F6F\96C5\9ED1', arial;
         background-color: #f0eff5;
+        opacity:0.4
     }
     .weui-tab__panel {
         margin-bottom: 20rpx;
@@ -30,8 +31,12 @@
                                 :message="item.message"
                                 :timestamp="item.timestamp"
                                 :likeNum="item.likeNum"
+                                :collectNum="item.collectNum"
                                 :messageType="item.messageType" />
                         </repeat>
+                    </view>
+                    <view hidden="{{!isEmpty}}">
+                        暂时还没有收藏，快去收藏你的秘密吧~
                     </view>
                 </view>
             </view>
@@ -44,9 +49,10 @@
     import wepy from 'wepy'
     import BottomTabBar from '../components/tab'
     import ShareContent from '../components/shareContent'
+    import { timeResolver } from '../utils/utils.js'
     export default class Collection extends wepy.page {
         config = {
-            'navigationBarTitleText': '广场'
+            'navigationBarTitleText': '我收藏的秘密'
         }
 
         components = {
@@ -58,7 +64,8 @@
             activeIndex: 0,
             sliderOffset: 0,
             sliderLeft: 0,
-            collectionList: []
+            collectionList: [],
+            isEmpty: true
         }
 
         methods = {
@@ -70,7 +77,6 @@
 
         events = {
             'toShareDetail': (target) => {
-                console.log(target)
                 this.$root.$navigate({url: './shareContentDetail'})
             }
         }
@@ -81,8 +87,13 @@
                 url: `${that.$parent.globalData.baseUrl}/user/getCollect/${id}`,
                 method: 'GET'
             })
-            console.log(res.data.respondBody)
             this.collectionList = res.data.respondBody
+            for (var i = 0; i < this.collectionList.length; i++) {
+                this.collectionList[i].timestamp = timeResolver(this.collectionList[i].timestamp)
+            }
+            if (this.collectionList.length !== 0) {
+                this.isEmpty = false
+            }
             this.$apply()
         }
         onShow() {

@@ -34,7 +34,7 @@ function timeResolver(ms) {
             }
         }
     }
-    return relativeTime
+    return relativeTime;
 }
 module.exports = {
     avatarColor: avatarColor,
