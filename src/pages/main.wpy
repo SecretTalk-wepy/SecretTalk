@@ -166,11 +166,17 @@
                 return {
                     bottleId: key,
                     content: content,
-                    color: avatarColor != null ? avatarColor(strangerId || '0') : '#ddffff',
-                    time: timeResolver(timestamp)
+                    color: avatarColor ? avatarColor(strangerId || '0') : '#ddffff',
+                    time: timestamp
                 }
             })
-            return recvList.reverse()
+            recvList.sort(this.compare);
+            return recvList.map((item) => {
+                return {
+                    ...item,
+                    time: timeResolver(item.time)
+                }
+            })
         }
 
         async getRecvList () {
@@ -185,11 +191,21 @@
                 return {
                     bottleId: key,
                     content: content,
-                    color: avatarColor != null ? avatarColor(strangerId || '0') : '#ddffff',
-                    time: timeResolver(timestamp)
+                    color: avatarColor ? avatarColor(strangerId || '0') : '#ddffff',
+                    time: timestamp
                 }
             })
-            return sentList.reverse()
+            sentList.sort(this.compare);
+            return sentList.map((item) => {
+                return {
+                    ...item,
+                    time: timeResolver(item.time)
+                }
+            })
+        }
+
+        compare(a, b) {
+            return b.time - a.time
         }
     }
 

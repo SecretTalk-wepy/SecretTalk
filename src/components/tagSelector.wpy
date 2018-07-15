@@ -26,11 +26,11 @@
     }
 </style>
 <template>
-    <view class="tags-wrapper">
+    <view class="tags-wrapper" @tap="selectTag">
         <repeat for="{{tagsData.tags}}" key="index" item="item">
             <button 
                 class="tag-item {{index === tagsData.target ? 'tag-item__on' : 'tag-item__off'}}"
-                @tap="selectTag({{index}})"
+                data-index="{{index}}"
             >
                 {{item}}
             </button>
@@ -48,9 +48,11 @@
             }
         }
         methods = {
-            selectTag(index) {
-                this.tagsData.target = index
-                this.$apply()
+            selectTag(e) {
+                if (e.target.dataset.index !== undefined) {
+                    this.tagsData.target = e.target.dataset.index
+                    this.$apply()
+                }
             }
         }
     }

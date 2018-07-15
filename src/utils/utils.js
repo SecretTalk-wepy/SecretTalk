@@ -15,19 +15,23 @@ function timeResolver(ms) {
     // different display mode
     if (days > 0) {
         if (days >= 365) {
-            relativeTime = Math.floor(days/365) + "年前"
+            relativeTime = Math.floor(days/365) + '年前'
         } else {
             if (days >= 30) {
-                relativeTime = Math.floor(days/30) + "个月前"
+                relativeTime = Math.floor(days/30) + '个月前'
             } else {
-                relativeTime = Math.floor(days) + "天前"
+                relativeTime = Math.floor(days) + '天前'
             }
         }
     } else {
         if (mins >= 60) {
-            relativeTime = Math.floor(mins/60) + "小时前"
+            relativeTime = Math.floor(mins/60) + '小时前'
         } else {
-            relativeTime = Math.floor(mins) + "分钟前"
+            if (Math.floor(mins) === 0) {
+                relativeTime = '刚刚'
+            } else {
+                relativeTime = Math.floor(mins) + '分钟前'
+            }
         }
     }
     return relativeTime;
