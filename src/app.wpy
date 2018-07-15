@@ -44,19 +44,19 @@ export default class extends wepy.app {
                     'pagePath': 'pages/main',
                     'text': '秘密',
                     'iconPath': 'images/secret.png',
-                    'selectedIconPath': 'images/secret.png'
+                    'selectedIconPath': 'images/secret_active.png'
                 },
                 {
                     'pagePath': 'pages/piazza',
                     'text': '广场',
                     'iconPath': 'images/discovery.png',
-                    'selectedIconPath': 'images/discovery.png'
+                    'selectedIconPath': 'images/discovery_active.png'
                 },
                 {
                     'pagePath': 'pages/my',
                     'text': '我的',
                     'iconPath': 'images/me.png',
-                    'selectedIconPath': 'images/me.png'
+                    'selectedIconPath': 'images/me_active.png'
                 }
             ]
         }
