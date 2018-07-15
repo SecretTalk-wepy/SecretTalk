@@ -212,11 +212,18 @@
                             commentId: commentId
                         }
                     })
-                    let that = this
-                    that.commentList[commentKey].islike = true
-                    that.commentList[commentKey].likeNum = that.commentList[commentKey].likeNum + 1
-                    that.shareConversationContent[0].likeNum = that.shareConversationContent[0].likeNum + 1
-                    that.$apply()
+                    if (res.data.code === '200') {
+                        let that = this
+                        that.commentList[commentKey].islike = true
+                        that.commentList[commentKey].likeNum = that.commentList[commentKey].likeNum + 1
+                        that.shareConversationContent[0].likeNum = that.shareConversationContent[0].likeNum + 1
+                        that.$apply()
+                    } else {
+                        wepy.showToast({
+                            title: '哎呀,出错了',
+                            icon: 'none'
+                        })
+                    }
                 }
             }
         }
@@ -253,29 +260,39 @@
                     that.$apply()
                 }
             },
-            
+
             async collectBtnClick(e) {
                 let that = this
+                let postBody = {
+                    messageId: that.messageId,
+                    userId: wx.getStorageSync('userId')
+                }
                 if (that.isCollect) { // 取消收藏
                     let res = await wepy.request({
                         url: `${that.$parent.globalData.baseUrl}/square/cancelCollect`,
                         method: 'POST',
-                        data: {
-                            messageId: that.messageId,
-                            userId: wx.getStorageSync('userId')
-                        }
+                        data: postBody
                     })
-                    that.isCollect = false
+                    if (res.data.code === '200') {
+                        wepy.showToast({
+                            title: '已取消收藏',
+                            icon: 'success'
+                        })
+                        that.isCollect = false
+                    }
                 } else {  // 收藏
                     let res = await wepy.request({
                         url: `${that.$parent.globalData.baseUrl}/square/collect`,
                         method: 'POST',
-                        data: {
-                            messageId: that.messageId,
-                            userId: wx.getStorageSync('userId')
-                        }
+                        data: postBody
                     })
-                    that.isCollect = true
+                    if (res.data.code === '200') {
+                        wepy.showToast({
+                            title: '已收藏',
+                            icon: 'success'
+                        })
+                        that.isCollect = true
+                    }
                 }
                 that.$apply()
             }
@@ -291,6 +308,11 @@
                 wepy.showToast({
                     title: '发送成功',
                     icon: 'success'
+                })
+            } else if (res.data.code === '200') {
+                wepy.showToast({
+                    title: '发送内容涉及敏感词汇',
+                    icon: 'none'
                 })
             } else {
                 wepy.showToast({
@@ -330,20 +352,7 @@
                     islike: false
                 }
             })
-            
-            // let commentList = res.data.respondBody.comments.map((session) => {
-            //     let {comment, commentId, likeNum, timeStamp, userId} = session
-            //     return {
-            //         comment: comment,
-            //         commentId: commentId,
-            //         likeNum: likeNum,
-            //         color: avatarColor ? avatarColor(userId || '0') : '#ddffff',
-            //         timeStamp: timeResolver(timeStamp),
-            //         userId: userId,
-            //         islike = false
-            //     }
-            // })
-
+        
             self.commentList = commentList
             self.totalLikeNum = res.data.respondBody.likeNum
             self.isCollect = (res.data.code === '200' ? true : false)
