@@ -11,7 +11,7 @@
 
 <template>
     <view>
-        <label class="me_page"/>
+        <label class="me_page" :userLabelList.sync="currentLabel"  :collectionList.sync="collections" :likeGor="likeGor"/>
     </view>
 </template>
 
@@ -24,8 +24,12 @@
         data = {
             collections: [],
             likeGor: 0,
-            userLabelList: []
+            currentLabel: ['汉纸', '深圳人', '永远18岁']
         }
+        config = {
+            'navigationBarTitleText': '我的'
+        }
+
         async sendData() {
             var id = wx.getStorageSync('userId')
             var that = this
@@ -33,14 +37,31 @@
                 url: `${that.$parent.globalData.baseUrl}/user/userId/${id}`,
                 method: 'GET'
             })
+            console.log(res)
             this.collections = res.data.respondBody.collections
             this.likeGor = res.data.respondBody.likeNum
+            var gen = ''
+            if (res.data.respondBody.userGender === '1') {
+                gen = '妹纸'
+            } else {
+                gen = '汉纸'
+            }
+            var city = res.data.respondBody.userCity + '人'
+            var ages = '永远18岁'
+            if (res.data.respondBody.userAge !== null) {
+                ages = String(res.data.respondBody.userAge) + '岁'
+            }
+            this.currentLabel = [gen, city, ages]
+            console.log(this.collections)
+            console.log(res)
             this.$apply()
-            console.log(res.data)
         }
-        onLoad () {
+        onShow () {
             this.sendData()
         };
+        components = {
+            bottomTabBar: BottomTabBar,
+            label: Label
+        }
     }
-
 </script>

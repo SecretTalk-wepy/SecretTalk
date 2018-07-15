@@ -85,7 +85,7 @@
         margin-bottom: 0rpx;
     }
 
-    .commentEditViewShow{ 
+    .commentEditViewShow{
         display: block;
         width: 100%;
         align-content: center;
@@ -95,13 +95,13 @@
         border-top: 1px solid #888888;
         background-color: #f0eff5;
     }
-    
+
     .cancelBtn {
         width: 50%;
         display: inline-block;
         text-align: center;
-    } 
-    
+    }
+
     .submitBtn {
         color : #800080;
         width: 50%;
@@ -116,7 +116,7 @@
         <view class="weui-tab__panel">
             <view class="weui-tab__content">
                 <repeat for="{{shareConversationContent}}" item="item" key="unique" index="index">
-                    <shareContent 
+                    <shareContent
                         :messageId="item.messageId"
                         :message="item.message"
                         :timestamp="item.timestamp"
@@ -150,7 +150,7 @@
         <view class="weui-tab__panel">
             <view class="weui-tab__content">
                 <repeat for="{{commentList}}" item="item" key="index" index="index">
-                    <commentItem 
+                    <commentItem
                         :commentId="item.commentId"
                         :comment="item.comment"
                         :timeStamp="item.timeStamp"
@@ -207,7 +207,7 @@
                     let res = await wepy.request({
                         url: `${this.$parent.globalData.baseUrl}/square/like`,
                         method: 'POST',
-                        data: { 
+                        data: {
                             messageId: msgid,
                             commentId: commentId
                         }
@@ -253,7 +253,7 @@
                     postBody.userId = wx.getStorageSync('userId')
                     postBody.squareMessageId = this.messageId
                     postBody.comment = this.commentContent
-                    await this.sendData(postBody);
+                    await this.sendData(postBody)
 
                     var that = this
                     that.showView = false
@@ -331,12 +331,12 @@
             let res = await wepy.request({
                 url: `${this.$parent.globalData.baseUrl}/square/DetailById`,
                 method: 'POST',
-                data: { 
+                data: {
                     messageId: this.messageId,
                     userId: wx.getStorageSync('userId')
                 }
             })
-            
+
             // 渲染数据
             let keys = Object.keys(res.data.respondBody.comments)
             let commentList = keys.map((key) => {
@@ -352,11 +352,11 @@
                     islike: false
                 }
             })
-        
+
             self.commentList = commentList
             self.totalLikeNum = res.data.respondBody.likeNum
-            self.isCollect = (res.data.code === '200' ? true : false)
-            self.shareConversationContent =  [
+            self.isCollect = (res.data.code === '200')
+            self.shareConversationContent = [
                 {
                     messageId: res.data.respondBody.messageId,
                     message: res.data.respondBody.message,
@@ -382,7 +382,7 @@
         }
 
         data = {
-            messageId: "",
+            messageId: '',
 
             totalLikeNum: 0,
             isCommentEditing: 0,

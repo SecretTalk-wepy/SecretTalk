@@ -1,22 +1,15 @@
 <style type="less">
     .labelView {
         background-color: #B03060;
-        position: relative;
-        display: flex;
-        align-content: center;
-        height:400rpx;
-        width:100%;
+        height: 35%;
     }
     .labelslist {
         position: relative;
-        display: flex;
+        display: inline-block;
         align-content: center;
         width:50%;
         height: 100%;
 
-    }
-    .userIcons {
-        float: right;
     }
     .setting {
         font-size: 35rpx;
@@ -40,25 +33,66 @@
         color: white;
         display: inline-block;
     }
+    .labelsView {
+        height: 100%;
+        width:100%;
+    }
+    .labelContent {
+        text-align: center;
+        border-collapse: collapse;
+        border-color: #EF4F4F;
+        width: 80%;
+        font-size: large;
+        font-family: "微软雅黑 Light";
+        background-color: white;
+    }
+    .panel {
+        margin:5rpx;
+        display: flex;
+        justify-content: center;
+        height: 30%;
+        width: 80%;
+        text-align:center;
+        align-items: center;
+        border-color: #B03060;
+    }
+    .userIcon {
+        background-color: #FFAEB9;
+        border:2rpx;
+        border-radius: 50%;
+        width: 200rpx;
+        height: 200rpx;
+        margin-right: 100rpx;
+        margin-top: 25rpx;
+        float: right;
+        display: inline-block;
+    }
 
 </style>
 <template>
     <view class="labelView">
-        <view class = "labelslist">
-            <labels />
+        <view class="labelslist">
+            <view class="labelsView">
+                <repeat for="{{userLabelList}}" key="index" index="index" item="item">
+                    <panel>
+                        <view class="labelContent">
+                            {{item}}
+                        </view>
+                    </panel>
+                </repeat>
+            </view>
         </view>
-        <view class="userIcons">
-            <userIcon />
+        <view class="userIcon">
         </view>
     </view>
     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="likeGod">
-        <!--<view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>-->
-        <!--<view class="weui-cell__bd weui-cell_primary">-->
-            <!--<view>收到的赞</view>-->
-        <!--</view>-->
+        <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
+        <view class="weui-cell__bd weui-cell_primary">
+            <view>收到的赞</view>
+        </view>
         <view class="weui-cell__ft">
             <image src="../images/LikeIcon.png" style="width: 25px;height: 25px;margin-right: 5px;" />
-            15
+            {{likeGor}}
         </view>
     </view>
     <navigator url="./collection" class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="gallery">
@@ -86,15 +120,18 @@
 </template>
 <script>
     import wepy from 'wepy'
-    import Labels from './labels'
-    import Icon from './icon'
     import Panel from './panel'
     export default class Label extends wepy.component {
-        onLoad () {
+        props = {
+            userLabelList: {
+                twoWay: true
+            },
+            likeGor: 1,
+            collectionList: []
+
         };
+
         components = {
-            labels: Labels,
-            userIcon: Icon,
             panel: Panel
         };
     }
