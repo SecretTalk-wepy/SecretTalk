@@ -24,10 +24,13 @@
             <view class="weui-tab">
                 <view class="weui-tab__panel">
                     <view class="weui-tab__content">
-                        <repeat for="{{healthContentList}}" key="index" index="index" item="item">
+                        <repeat for="{{collectionList}}" key="index" index="index" item="item">
                             <shareContent
-                                :content="item.content"
-                                :time="item.time" />
+                                :messageId="item.messageId"
+                                :message="item.message"
+                                :timestamp="item.timestamp"
+                                :likeNum="item.likeNum"
+                                :messageType="item.messageType" />
                         </repeat>
                     </view>
                 </view>
@@ -55,21 +58,7 @@
             activeIndex: 0,
             sliderOffset: 0,
             sliderLeft: 0,
-            healthContentList: [
-                {
-                    id: 1,
-                    content: '健康找不到对象怎么办',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    content: '健康找不到对象怎么办找不到对象怎么办找不到对象怎么办',
-                    time: '20180808'
-                }
-            ]
+            collectionList: []
         }
 
         methods = {
@@ -84,6 +73,20 @@
                 console.log(target)
                 this.$root.$navigate({url: './shareContentDetail'})
             }
+        }
+        async sendData() {
+            var id = wx.getStorageSync('userId')
+            var that = this
+            let res = await wepy.request({
+                url: `${that.$parent.globalData.baseUrl}/user/getCollect/${id}`,
+                method: 'GET'
+            })
+            console.log(res.data.respondBody)
+            this.collectionList = res.data.respondBody
+            this.$apply()
+        }
+        onShow() {
+            this.sendData()
         }
     }
 </script>
