@@ -69,7 +69,7 @@
         <view class="msg-time">
             {{ timestamp }}
             <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" @tap="likeBtnClick"/>
+                <image class="likeIcon" src="../images/likeIcon0.png"/>
                 <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
@@ -80,7 +80,7 @@
     import wepy from 'wepy'
 
     export default class shareContent extends wepy.component {
-        props = ['messageId', 'message','timestamp','likeNum', 'messageType'];
+        props = ['messageId', 'message','timestamp','likeNum', 'messageType', 'collectNum'];
 
         data = {
             // messageId:'666'
@@ -91,13 +91,9 @@
         };
 
         methods = {
-            tapItem (e) {
-                console.log('msgID:')
-                console.log(e.currentTarget.dataset.msgid)
-                
+            tapItem (e) {                
                 var newE = e
                 newE.messageId = e.currentTarget.dataset.msgid
-                // newE.messageId = 
                 this.$emit('toShareDetail', newE)
             }
         }

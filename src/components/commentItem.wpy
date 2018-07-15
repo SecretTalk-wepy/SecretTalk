@@ -71,10 +71,10 @@
         </view>
         <view class="comment-time">
             {{ timeStamp }}
-            <!-- <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" data-commentid="{{commentId}}" @tap="likeBtnClick"/>
+            <view class="likeBtnWrapper">
+                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islike="{{islike}}" data-commentid="{{commentId}}" data-commentkey="{{commentKey}}" @tap="likeBtnClick"/>
                 <text class="likenum">{{ likeNum }}</text>
-            </view> -->
+            </view>
         </view>
     </view>
 </template>
@@ -89,28 +89,13 @@
             console.log('enter')
         };
 
-        data = {
-            islike: false
-        };
-
         methods = {
             likeBtnClick (e) {
-                // this.islike = !this.islike
-                // console.log(e)
-                // if (e.currentTarget.dataset.islikeon) {
-                //     console.log('dislike')
-                //     // todo: 告诉后台-1
-                // } else {
-                //     console.log('like')
-                //     // todo: 告诉后台+1
-                // }
-                // e.currentTarget.dataset.islikeon = !e.currentTarget.dataset.islikeon
-
-                // var newE = e
-                // newE.messageId = e.currentTarget.dataset.msgid
-                // newE.commentId = e.currentTarget.dataset.commentid
-                // console.log(newE)
-                // this.$emit('likeBtnClick', newE)
+                var newE = e
+                newE.commentId = e.currentTarget.dataset.commentid
+                newE.islike = e.currentTarget.dataset.islike
+                newE.commentKey = e.currentTarget.dataset.commentkey
+                this.$emit('onlikeClick', newE)
             }
         }
     }
