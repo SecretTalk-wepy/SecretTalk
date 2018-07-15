@@ -120,7 +120,8 @@
                         :messageId="item.messageId"
                         :message="item.message"
                         :timestamp="item.timestamp"
-                        :likeNum="item.collectNum"
+                        :likeNum="item.likeNum"
+                        :collectNum="item.collectNum"
                         :messageType="item.messageType" />
                 </repeat>
             </view>
@@ -155,7 +156,9 @@
                         :timeStamp="item.timeStamp"
                         :likeNum="item.likeNum"
                         :messageType="item.messageType"
-                        :color="item.color" />
+                        :color="item.color"
+                        :islike="item.islike"
+                        :commentKey="item.commentKey"/>
                 </repeat>
             </view>
         </view>
@@ -185,9 +188,38 @@
         components = {
             shareContent: ShareContent,
             commentItem: CommentItem
-        };
+        }
 
-        
+        events = {
+            async onlikeClick(target) {
+                console.log('onlikeClick target')
+                let msgid = this.messageId
+                let commentId = target.commentId
+                let islike = target.islike
+                let commentKey = target.commentKey
+
+                if (islike) {
+                    wx.showModal({
+                        title: '提示',
+                        content: '已经赞过了哦:)'
+                    })
+                } else {
+                    let res = await wepy.request({
+                        url: `${this.$parent.globalData.baseUrl}/square/like`,
+                        method: 'POST',
+                        data: { 
+                            messageId: msgid,
+                            commentId: commentId
+                        }
+                    })
+                    let that = this
+                    that.commentList[commentKey].islike = true
+                    that.commentList[commentKey].likeNum = that.commentList[commentKey].likeNum + 1
+                    that.shareConversationContent[0].likeNum = that.shareConversationContent[0].likeNum + 1
+                    that.$apply()
+                }
+            }
+        }
 
         methods = {
             commentBtnAreaShowClick(e) {
@@ -284,17 +316,34 @@
             })
             
             // 渲染数据
-            let commentList = res.data.respondBody.comments.map((session) => {
-                let {comment, commitId, likeNum, timeStamp, userId} = session
+            let keys = Object.keys(res.data.respondBody.comments)
+            let commentList = keys.map((key) => {
+                let {comment, commitId, likeNum, timeStamp, userId} = res.data.respondBody.comments[key]
                 return {
+                    commentKey: key,
                     comment: comment,
-                    commitId: commitId,
+                    commentId: commitId,
                     likeNum: likeNum,
                     color: avatarColor ? avatarColor(userId || '0') : '#ddffff',
                     timeStamp: timeResolver(timeStamp),
-                    userId: userId
+                    userId: userId,
+                    islike: false
                 }
             })
+            
+            // let commentList = res.data.respondBody.comments.map((session) => {
+            //     let {comment, commentId, likeNum, timeStamp, userId} = session
+            //     return {
+            //         comment: comment,
+            //         commentId: commentId,
+            //         likeNum: likeNum,
+            //         color: avatarColor ? avatarColor(userId || '0') : '#ddffff',
+            //         timeStamp: timeResolver(timeStamp),
+            //         userId: userId,
+            //         islike = false
+            //     }
+            // })
+
             self.commentList = commentList
             self.totalLikeNum = res.data.respondBody.likeNum
             self.isCollect = (res.data.code === '200' ? true : false)
@@ -319,7 +368,7 @@
             setTimeout(function () {
                 // 不加这个方法真机下拉会一直处于刷新状态，无法复位
                 wepy.stopPullDownRefresh()
-            }, 3000)
+            }, 2000)
             await this.getMsgAndComments()
         }
 

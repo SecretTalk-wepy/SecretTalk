@@ -40,7 +40,7 @@
              */
             enterLoginPage: async function () {
                 await this.login()
-                this.$root.$switch({url: './main'})
+                this.$root.$switch({url: './piazza'})
             }
         }
 
