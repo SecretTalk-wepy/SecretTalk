@@ -41,6 +41,6 @@
         onLoad () {
             this.sendData()
         };
-
+    }
 
 </script>
