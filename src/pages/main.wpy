@@ -170,7 +170,7 @@
                     time: timestamp
                 }
             })
-            recvList.sort(this.compare);
+            recvList.sort(this.compare)
             return recvList.map((item) => {
                 return {
                     ...item,
@@ -195,7 +195,7 @@
                     time: timestamp
                 }
             })
-            sentList.sort(this.compare);
+            sentList.sort(this.compare)
             return sentList.map((item) => {
                 return {
                     ...item,
