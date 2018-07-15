@@ -94,10 +94,9 @@
             tapItem (e) {
                 console.log('msgID:')
                 console.log(e.currentTarget.dataset.msgid)
-                
+
                 var newE = e
                 newE.messageId = e.currentTarget.dataset.msgid
-                // newE.messageId = 
                 this.$emit('toShareDetail', newE)
             }
         }
