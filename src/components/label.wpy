@@ -52,10 +52,10 @@
         </view>
     </view>
     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" id="likeGod">
-        <view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>
-        <view class="weui-cell__bd weui-cell_primary">
-            <view>收到的赞</view>
-        </view>
+        <!--<view class="weui-cell__hd"><image src="{{icon20}}" style="width: 20px;height: 20px;margin-right: 5px" /></view>-->
+        <!--<view class="weui-cell__bd weui-cell_primary">-->
+            <!--<view>收到的赞</view>-->
+        <!--</view>-->
         <view class="weui-cell__ft">
             <image src="../images/LikeIcon.png" style="width: 25px;height: 25px;margin-right: 5px;" />
             15
