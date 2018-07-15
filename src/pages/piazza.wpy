@@ -19,6 +19,37 @@
     }
     .weui-tab__panel {
         margin-bottom: 100rpx;
+        flex: auto;
+        position: relative;
+    }
+    
+    .weui-tab__panel scroll-view{
+        /* position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0; */
+    }
+    
+    .loading{
+        padding: 10rpx;
+        text-align: center;
+        color:gray;
+        size: 26rpx;
+    }
+    .loading:before{
+        display: inline-block;
+        margin-right: 5rpx;
+        vertical-align: middle;
+        content: '';
+        width: 40rpx;
+        height: 40rpx;
+        background: url(../../images/icon-loading.png) no-repeat;
+        background-size: contain;
+        animation: rotate 1s linear infinite;
+    }
+    .loading.complete:before{
+        display: none;
     }
 
 </style>
@@ -41,8 +72,10 @@
                                 :message="item.message"
                                 :timestamp="item.timestamp"
                                 :likeNum="item.likeNum"
+                                :collectNum="item.collectNum"
                                 :messageType="item.messageType" />
                         </repeat>
+                        <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>                
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                         <repeat for="{{WorkplaceContentList}}" key="index" index="index" item="item">
@@ -51,8 +84,10 @@
                                 :message="item.message"
                                 :timestamp="item.timestamp"
                                 :likeNum="item.likeNum"
+                                :collectNum="item.collectNum"
                                 :messageType="item.messageType" />
                         </repeat>
+                        <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 2}}">
                         <repeat for="{{emotionContentList}}" key="index" index="index" item="item">
@@ -61,8 +96,10 @@
                                 :message="item.message"
                                 :timestamp="item.timestamp"
                                 :likeNum="item.likeNum"
+                                :collectNum="item.collectNum"
                                 :messageType="item.messageType" />
                         </repeat>
+                        <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 3}}">
                         <repeat for="{{marriageContentList}}" key="index" index="index" item="item">
@@ -71,8 +108,10 @@
                                 :message="item.message"
                                 :timestamp="item.timestamp"
                                 :likeNum="item.likeNum"
+                                :collectNum="item.collectNum"
                                 :messageType="item.messageType" />
                         </repeat>
+                        <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 4}}">
                         <repeat for="{{otherContentList}}" key="index" index="index" item="item">
@@ -81,8 +120,10 @@
                                 :message="item.message"
                                 :timestamp="item.timestamp"
                                 :likeNum="item.likeNum"
+                                :collectNum="item.collectNum"
                                 :messageType="item.messageType" />
                         </repeat>
+                        <view class="loading complete" hidden="{{!searchLoadingComplete}}">已加载全部</view>
                     </view>
                 </view>
             </view>
@@ -95,12 +136,15 @@
     import wepy from 'wepy'
     import BottomTabBar from '../components/tab'
     import ShareContent from '../components/shareContent'
+    import { avatarColor, timeResolver } from '../utils/utils.js'
 
     const sliderWidth = 38
     
     export default class Piazza extends wepy.page {
         config = {
-            'navigationBarTitleText': '广场'
+            'navigationBarTitleText': '广场',
+            'enablePullDownRefresh': true,
+            'backgroundTextStyle': 'dark'
         }
 
         components = {
@@ -120,99 +164,166 @@
             marriageContentList: [],
             otherContentList: [],
 
-            loadPage: 0,
-            loadSize: 5
+            loadPage: {
+                '0': 0,
+                '1': 0,
+                '2': 0,
+                '3': 0,
+                '4': 0
+            },
+            loadSize: 8,
+            searchLoading: false, // "上拉加载"的变量，默认false，隐藏
+            searchLoadingComplete: false,  // “没有数据”的变量，默认false，隐藏
+            isFromSearch: true   // 用于判断searchSongList数组是不是空数组，默认true，空的数组
         }
 
         methods = {
             async tabClick (e) {
-                this.sliderOffset = e.currentTarget.offsetLeft
-                this.activeIndex = e.currentTarget.id
+                let that = this
+                that.sliderOffset = e.currentTarget.offsetLeft
+                that.activeIndex = e.currentTarget.id
 
-                let postBody = {}
-                // postBody.userId = wx.getStorageSync('userId')
-                postBody.type = parseInt(this.activeIndex)
-                postBody.page = this.loadPage
-                postBody.size = this.loadSize
-                console.log(postBody)
-                await this.sendData(postBody);
+                await that.fetchData();
+                that.$apply()
             }
         }
 
-        async sendData(postBody) {
-            var that = this;
+        async fetchData(postBody) {
+            let that = this
+            let msgType= parseInt(this.activeIndex)
+            that.isFromSearch =  false  // 触发到上拉事件，把isFromSearch设为为false
+            let searchPageNum = that.loadPage[msgType.toString()]  // 把第几次加载次数作为参数
+            let callbackcount = that.loadSize  // 返回数据的个数
+            
+            //访问网络
+            await that.getSearchSecrete(searchPageNum, callbackcount)
+            that.$apply()
+        }
+
+        async getSearchSecrete(pageindex, callbackcount, callback){
+            var msgType = parseInt(this.activeIndex)
+            let postBody = {
+                type: msgType,
+                page: pageindex,
+                size: this.loadSize
+            }
             let res = await wepy.request({
                 url: `${this.$parent.globalData.baseUrl}/square/index`,
                 method: 'POST',
                 data: postBody
             })
-            console.log(res.data.respondBody)
+            
+            if(res.statusCode == 200){
+                let that = this
+                // 处理dataList的时间戳
+                let dataList = res.data.respondBody.map((session) => {
+                    let {messageId, message, timestamp, likeNum, userId, collectNum} = session
+                    return {
+                        messageId: messageId,
+                        message: message,
+                        // color: avatarColor ? avatarColor(userId || '0') : '#ddffff',
+                        timestamp: timeResolver(timestamp),
+                        likeNum: likeNum,
+                        userId: userId,
+                        collectNum: collectNum
+                    }
+                })
 
-            if (postBody.type === 0) {
-                that.setData({
-                    healthContentList: res.data.respondBody
-                });
-                // await wepy.setStorage({
-                //     key: 'defaultPiazzaHealthyData',
-                //     data: res.data.respondBody
-                // })
-            } else if (postBody.type === 1) {
-                that.setData({
-                    WorkplaceContentList: res.data.respondBody
-                });
-            } else if (postBody.type === 2) {
-                that.setData({
-                    emotionContentList: res.data.respondBody
-                });
-            } else if (postBody.type === 3) {
-                that.setData({
-                    marriageContentList: res.data.respondBody
-                });
-            } else if (postBody.type === 4) {
-                that.setData({
-                    otherContentList: res.data.respondBody
-                });
+                // 判断是否有数据，有则取数据
+                if(dataList.length != 0){
+                    let searchList = [];
+                    that.setData({
+                        searchLoading: true   //把"上拉加载"的变量设为true，显示
+                    });
+                    
+                    //如果isFromSearch是true从data中取出数据，否则先从原来的数据继续添加
+                    if (msgType === 0) {
+                        that.isFromSearch ? searchList = dataList : searchList = that.healthContentList.concat(dataList)
+                        that.healthContentList = searchList
+                    } else if (msgType === 1) {
+                        that.isFromSearch ? searchList = dataList : searchList = that.WorkplaceContentList.concat(dataList)
+                        that.WorkplaceContentList = searchList
+                    } else if (msgType === 2) {
+                        that.isFromSearch ? searchList = dataList : searchList = that.emotionContentList.concat(dataList)
+                        that.emotionContentList = searchList
+                    } else if (msgType === 3) {
+                        that.isFromSearch ? searchList = dataList : searchList = that.marriageContentList.concat(dataList)
+                        that.marriageContentList = searchList
+                    } else if (msgType === 4) {
+                        that.isFromSearch ? searchList = dataList : searchList = that.otherContentList.concat(dataList)
+                        that.otherContentList = searchList
+                    }
+                    that.loadPage[msgType.toString()] = that.loadPage[msgType.toString()] + 1
+                //没有数据了，把“没有数据”显示，把“上拉加载”隐藏
+                } else {
+                    that.searchLoadingComplete = true  //把“没有数据”设为true，显示
+                    // that.loadPage = 0
+                }
+                that.$apply()
             }
         }
 
+
+        async onLoad () {
+            let res = wx.getSystemInfoSync()
+            this.sliderLeft = (res.windowWidth / this.shareContentClass.length - sliderWidth) / 5
+            this.sliderOffset = res.windowWidth / this.shareContentClass.length * this.activeIndex
+
+            this.setData({  
+                loadPage: {
+                    '0': 0,
+                    '1': 0,
+                    '2': 0,
+                    '3': 0,
+                    '4': 0
+                },  //第一次加载，设置0
+                isFromSearch: true,  //第一次加载，设置true
+                searchLoadingComplete:false //把“没有数据”设为false，隐藏
+            })
+        }
+
+        async onShow () {
+            await this.fetchData();
+        }
+
+        async onReachBottom() {
+            await this.fetchData();
+        }
+
+        async onPullDownRefresh() {
+            setTimeout(function () {
+                // 不加这个方法真机下拉会一直处于刷新状态，无法复位
+                wepy.stopPullDownRefresh()
+            }, 3000)
+
+            let that = this
+            that.loadPage = {
+                    '0': 0,
+                    '1': 0,
+                    '2': 0,
+                    '3': 0,
+                    '4': 0
+                },
+            that.isFromSearch = true,
+            that.searchLoadingComplete = false,
+            that.healthContentList= [],
+            that.WorkplaceContentList= [],
+            that.emotionContentList= [],
+            that.marriageContentList= [],
+            that.otherContentList= [],
+            that.$apply()
+            await that.fetchData()
+        }
+        
         events = {
             async toShareDetail(target) {
-                console.log('toShareDetail:')
-                console.log(target.messageId)
                 var msgid = target.messageId
                 await wepy.setStorage({
                     key: 'msgId',
                     data: msgid
                 })
-                this.$root.$redirect({url: './shareContentDetail'})
+                this.$root.$navigate({url: './shareContentDetail'})
             }
-        }
-
-        async onLoad () {
-            console.log('piazza onload')
-            let res = wx.getSystemInfoSync()
-            this.sliderLeft = (res.windowWidth / this.shareContentClass.length - sliderWidth) / 5
-            this.sliderOffset = res.windowWidth / this.shareContentClass.length * this.activeIndex
-        }
-
-        async onShow () {
-            console.log('piazza onshow')
-            let postBody = {}
-            postBody.type = parseInt(this.activeIndex)
-            postBody.page = this.loadPage
-            postBody.size = this.loadSize
-            console.log(postBody)
-            await this.sendData(postBody);
-
-            // this.healthContentList = [
-            //     {
-            //         messageId: "666",
-            //         timestamp: 20180909,
-            //         likeNum: 22,
-            //         messageType: 0,
-            //         message: "testtes"
-            //     }
-            // ]
         }
     }
 </script>

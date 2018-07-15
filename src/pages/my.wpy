@@ -11,7 +11,7 @@
 
 <template>
     <view>
-        <label class="me_page" :userLabelList.async="currentLabel"  :collectionList="collections" :likeGor="likeGor"/>
+        <label class="me_page"/>
     </view>
 </template>
 
@@ -41,9 +41,6 @@
         onLoad () {
             this.sendData()
         };
-        components = {
-            bottomTabBar: BottomTabBar,
-            label: Label
-        }
-    }
+
+
 </script>

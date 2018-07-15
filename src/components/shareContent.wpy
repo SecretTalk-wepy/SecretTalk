@@ -27,16 +27,16 @@
         -webkit-line-clamp: 3;
     }
     .msg-time {
-        width: 100rpx;
-        font-size: 14rpx;
+        width: auto;
+        font-size: 22rpx;
         color: #888888;
         word-break: break-all;
     }
 
     .likenum {
         display: inline;
-        font-size: 25rpx;
-        color: #333333;
+        font-size: 10pt;
+        color:dimgray;
         text-overflow: ellipsis;
         word-break: break-all;
         -webkit-box-orient: vertical;
@@ -57,6 +57,8 @@
         position: relative;
         display: flex;
         align-content: flex-start;
+        color:dimgray;
+        font-size: 10pt;
     }
 </style>
 
@@ -67,9 +69,12 @@
             {{ message }}
         </view>
         <view class="msg-time">
-            {{ timestamp }}
+            <view>
+                <text>{{ timestamp }}</text>
+            </view>
             <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" @tap="likeBtnClick"/>
+                <!-- <image class="likeIcon" src="../images/likeIcon0.png"/> -->
+                <text class="likeIcon">赞</text>
                 <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
@@ -80,7 +85,7 @@
     import wepy from 'wepy'
 
     export default class shareContent extends wepy.component {
-        props = ['messageId', 'message','timestamp','likeNum', 'messageType'];
+        props = ['messageId', 'message','timestamp','likeNum', 'messageType', 'collectNum'];
 
         data = {
             // messageId:'666'
@@ -91,10 +96,7 @@
         };
 
         methods = {
-            tapItem (e) {
-                console.log('msgID:')
-                console.log(e.currentTarget.dataset.msgid)
-
+            tapItem (e) {                
                 var newE = e
                 newE.messageId = e.currentTarget.dataset.msgid
                 this.$emit('toShareDetail', newE)
@@ -102,3 +104,4 @@
         }
     }
 </script>
+

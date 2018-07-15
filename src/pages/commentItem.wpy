@@ -9,7 +9,6 @@
         height: 100rpx;
         border-radius: 50%;
         background-color: #99ddff;
-        opacity: 0.3;
     }
     .profilePhoto {
         width: 100rpx;
@@ -28,9 +27,8 @@
         -webkit-line-clamp: 3;
     }
     .comment-time {
-        margin-top: 10rpx;
         width: 120rpx;
-        font-size: 24rpx;
+        font-size: 22rpx;
         color: #888888;
         word-break: break-all;
     }
@@ -72,7 +70,7 @@
         <view class="comment-time">
             {{ timeStamp }}
             <view class="likeBtnWrapper">
-                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islike="{{islike}}" data-commentid="{{commentId}}" data-commentkey="{{commentKey}}" @tap="likeBtnClick"/>
+                <image class="likeIcon" src="../images/likeIcon{{islike?'1':'0'}}.png" data-islikeon="{{islike}}" data-commentid="{{commentId}}" @tap="likeBtnClick"/>
                 <text class="likenum">{{ likeNum }}</text>
             </view>
         </view>
@@ -83,19 +81,34 @@
     import wepy from 'wepy'
 
     export default class CommentItem extends wepy.component {
-        props = ['commentId', 'comment', 'timeStamp', 'likeNum', 'messageType'];
+        props = ['commentId', 'comment', 'timeStamp', 'likeNum', 'messageType', 'color'];
 
         onLoad () {
             console.log('enter')
         };
 
+        data = {
+            islike: false
+        };
+
         methods = {
             likeBtnClick (e) {
-                var newE = e
-                newE.commentId = e.currentTarget.dataset.commentid
-                newE.islike = e.currentTarget.dataset.islike
-                newE.commentKey = e.currentTarget.dataset.commentkey
-                this.$emit('onlikeClick', newE)
+                this.islike = !this.islike
+                console.log(e)
+                if (e.currentTarget.dataset.islikeon) {
+                    console.log('dislike')
+                    // todo: 告诉后台-1
+                } else {
+                    console.log('like')
+                    // todo: 告诉后台+1
+                }
+                e.currentTarget.dataset.islikeon = !e.currentTarget.dataset.islikeon
+
+                // var newE = e
+                // newE.messageId = e.currentTarget.dataset.msgid
+                // newE.commentId = e.currentTarget.dataset.commentid
+                // console.log(newE)
+                // this.$emit('likeBtnClick', newE)
             }
         }
     }

@@ -55,21 +55,23 @@
                         </view>
                         <view class="weui-navbar__slider" style="background-color: #800080; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px); width: 96px"></view>
                     </view>
-                    <view class="weui-tab__panel">
+                    <view class="weui-tab__panel" @tap="tapMsg">
                         <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                             <repeat for="{{sentList}}" key="index" index="index" item="item">
-                                <msgItem 
+                                <msgItem
                                     :content="item.content"
                                     :time="item.time"
-                                    :color="item.color" />
+                                    :color="item.color"
+                                    :bottleId="item.bottleId" />
                             </repeat>
                         </view>
                         <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                             <repeat for="{{recvList}}" key="index" index="index" item="item">
-                                <msgItem 
+                                <msgItem
                                     :content="item.content"
                                     :time="item.time" 
-                                    :color="item.color" />
+                                    :color="item.color"
+                                    :bottleId="item.bottleId" />
                             </repeat>
                         </view>
                     </view>
@@ -81,14 +83,16 @@
 
 <script>
     import wepy from 'wepy'
-    import {getAvatarColor} from '../utils/avatarColor'
     import MsgItem from '../components/msgItem'
+    import { avatarColor, timeResolver } from '../utils/utils.js'
 
     const sliderWidth = 96
+    let userId
 
     export default class Main extends wepy.page {
         config = {
-            'navigationBarTitleText': '秘密说'
+            'navigationBarTitleText': '秘密说',
+            'onReachBottomDistance': -1
         }
 
         components = {
@@ -100,79 +104,108 @@
             activeIndex: 0,
             sliderOffset: 0,
             sliderLeft: 0,
-            recvList: [
-                {
-                    id: 1,
-                    color: getAvatarColor('123234'),
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    color: getAvatarColor('oM5tc5Wpvzn5adOMFBQXmgq7qR-U'),
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    color: getAvatarColor('oM5tc5Wpvzn5adOMF'),
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }
-            ],
-            sentList: [
-                {
-                    id: 1,
-                    color: getAvatarColor('450601552'),
-                    content: 'testsets234234123123tstest',
-                    time: '20180808'
-                }, {
-                    id: 2,
-                    color: getAvatarColor('oM5tc5Wpvzn5adOMFBQXmgq7qR-U'),
-                    content: 'sehto234534uhgs4234jif as3423dfoh d23454hgh rtsfd ',
-                    time: '20184737'
-                }, {
-                    id: 3,
-                    color: getAvatarColor('4506021552'),
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }, {
-                    id: 4,
-                    color: getAvatarColor('450601552'),
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
-                    time: '20184737'
-                }, {
-                    id: 5,
-                    color: getAvatarColor('453601552'),
-                    content: 'testsetsetsettestsetstest',
-                    time: '20180808'
-                }, {
-                    id: 6,
-                    content: 'sehtoiwehiudfuhgsjif asdfoh dsfh we sidf we sfd ',
-                    time: '20184737'
-                }
-            ]
+            recvList: [],
+            sentList: []
         }
 
         methods = {
-            tabClick (e) {
+            async tabClick (e) {
                 this.sliderOffset = e.currentTarget.offsetLeft
                 this.activeIndex = e.currentTarget.id
+                if (e.currentTarget.id === '0') {
+                    this.sentList = await this.getSentList()
+                    this.$apply()
+                } else {
+                    this.recvList = await this.getRecvList()
+                    this.$apply()
+                }
             },
             editNewSecret() {
                 this.$root.$navigate({url: './edit_secret'})
+            },
+            tapMsg(e) {
+                if (e.target.dataset.bottle) {
+                    this.$root.$navigate('./secret_detail', {
+                        bottleId: e.target.dataset.bottle
+                    })
+                }
             }
         }
 
         events = {
-            'toDetail': (target) => {
-                console.log(target)
-                this.$root.$navigate({url: './secret_detail'})
+            'toDetail': (bottleId) => {
+                this.$root.$navigate('./secret_detail', {
+                    bottleId: bottleId
+                })
             }
         }
 
-        onLoad () {
+        async onLoad () {
+            console.log('load')
             let res = wx.getSystemInfoSync()
             this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2
             this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
+            userId = wx.getStorageSync('userId')
+        }
+
+        async onShow() {
+            this.sentList = await this.getSentList()
+            this.recvList = await this.getRecvList()
+            this.$apply()
+        }
+
+        async getSentList () {
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/secret/getMySend/${userId}`,
+                method: 'GET'
+            })
+            let keys = Object.keys(res.data.respondBody)
+            let recvList = keys.map((key) => {
+                let {content, receiverId, senderId, timestamp} = res.data.respondBody[key][0]
+                let strangerId = receiverId === userId ? senderId : receiverId
+                return {
+                    bottleId: key,
+                    content: content,
+                    color: avatarColor ? avatarColor(strangerId || '0') : '#ddffff',
+                    time: timestamp
+                }
+            })
+            recvList.sort(this.compare);
+            return recvList.map((item) => {
+                return {
+                    ...item,
+                    time: timeResolver(item.time)
+                }
+            })
+        }
+
+        async getRecvList () {
+            let res = await wepy.request({
+                url: `${this.$parent.globalData.baseUrl}/secret/getMyReceive/${userId}`,
+                method: 'GET'
+            })
+            let keys = Object.keys(res.data.respondBody)
+            let sentList = keys.map((key) => {
+                let {content, receiverId, senderId, timestamp} = res.data.respondBody[key][0]
+                let strangerId = receiverId === userId ? senderId : receiverId
+                return {
+                    bottleId: key,
+                    content: content,
+                    color: avatarColor ? avatarColor(strangerId || '0') : '#ddffff',
+                    time: timestamp
+                }
+            })
+            sentList.sort(this.compare);
+            return sentList.map((item) => {
+                return {
+                    ...item,
+                    time: timeResolver(item.time)
+                }
+            })
+        }
+
+        compare(a, b) {
+            return b.time - a.time
         }
     }
 
