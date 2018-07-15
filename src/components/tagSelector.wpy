@@ -29,7 +29,7 @@
     <view class="tags-wrapper" @tap="selectTag">
         <repeat for="{{tagsData.tags}}" key="index" item="item">
             <button 
-                class="tag-item {{index === tagsData.target ? 'tag-item__on' : 'tag-item__off'}}"
+                class="tag-item {{index === target ? 'tag-item__on' : 'tag-item__off'}}"
                 data-index="{{index}}"
             >
                 {{item}}
@@ -41,6 +41,9 @@
     import wepy from 'wepy'
 
     export default class TagSelector extends wepy.component {
+        data = {
+            target: 0
+        }
         props = {
             tagsData: {
                 type: Object,
@@ -51,7 +54,7 @@
             selectTag(e) {
                 if (e.target.dataset.index !== undefined) {
                     this.tagsData.target = e.target.dataset.index
-                    this.$apply()
+                    this.target = e.target.dataset.index
                 }
             }
         }
