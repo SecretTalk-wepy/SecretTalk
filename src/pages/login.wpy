@@ -17,9 +17,9 @@
     }
 </style>
 <template>
-    <view class="containers">
+    <view class="containers" >
         <image src="../images/start.jpg" mode="aspectFill"/>
-        <button @tap="enterLoginPage">
+        <button @tap="enterLoginPage" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
             <image src="../images/login.png" z-index="-1" class="loginButton"/>
         </button>
     </view>
@@ -41,6 +41,30 @@
             enterLoginPage: async function () {
                 await this.login()
                 this.$root.$switch({url: './main'})
+            },
+            bindGetUserInfo: async function(res) {
+                var id = wx.getStorageSync('userId')
+                var userCityLoc = ''
+                if (res.detail.userInfo.city === '') {
+                    userCityLoc = res.detail.userInfo.country
+                } else {
+                    userCityLoc = res.detail.userInfo.city
+                }
+                var gender = '0'
+                if (res.detail.userInfo.gender - 1 === 1) {
+                    gender = '1'
+                }
+                var postBody = {
+                    userId: id,
+                    userNickname: res.detail.userInfo.nickName,
+                    userGender: gender,
+                    userCity: userCityLoc
+                }
+                await wepy.request({
+                    url: `${this.$parent.globalData.baseUrl}/user/personalInformation`,
+                    method: 'POST',
+                    data: postBody
+                })
             }
         }
 
@@ -58,7 +82,6 @@
                     code: loginRes.code
                 }
             })
-            console.log('login res', res)
             await wepy.setStorage({
                 key: 'userId',
                 data: res.data.respondBody.userId
