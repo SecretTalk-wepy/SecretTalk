@@ -11,7 +11,7 @@
 
 <template>
     <view>
-        <label class="me_page" :userLabelList.sync="currentLabel"  :collectionList.sync="collections" :likeGor="likeGor"/>
+        <label class="me_page" :userLabelList.sync="currentLabel"  :collectionList.sync="collections" :likeGor.sync="likeGor"/>
     </view>
 </template>
 
@@ -23,7 +23,7 @@
     export default class MyPage extends wepy.page {
         data = {
             collections: [],
-            likeGor: 0,
+            likeGor: 1,
             currentLabel: ['汉纸', '深圳人', '永远18岁']
         }
         config = {
@@ -31,6 +31,7 @@
         }
 
         async sendData() {
+            console.log('enter')
             var id = wx.getStorageSync('userId')
             var that = this
             let res = await wepy.request({
@@ -38,27 +39,35 @@
                 method: 'GET'
             })
             console.log(res)
-            this.collections = res.data.respondBody.collections
-            this.likeGor = res.data.respondBody.likeNum
+            that.collections = res.data.respondBody.collections
+            that.likeGor = res.data.respondBody.likeNum
+            this.$apply()
             var gen = ''
             if (res.data.respondBody.userGender === '1') {
                 gen = '妹纸'
             } else {
                 gen = '汉纸'
             }
-            var city = res.data.respondBody.userCity + '人'
+            var city = '深圳'
+            if (res.data.respondBody.userCity !== null) {
+                city = res.data.respondBody.userCity
+            }
+            city = city + '人'
             var ages = '永远18岁'
             if (res.data.respondBody.userAge !== null) {
                 ages = String(res.data.respondBody.userAge) + '岁'
             }
+
             this.currentLabel = [gen, city, ages]
-            console.log(this.collections)
-            console.log(res)
             this.$apply()
         }
-        onShow () {
-            this.sendData()
+        async onShow () {
+            await this.sendData()
         };
+        async onLoad () {
+            await this.sendData()
+            this.$apply()
+        }
         components = {
             bottomTabBar: BottomTabBar,
             label: Label
